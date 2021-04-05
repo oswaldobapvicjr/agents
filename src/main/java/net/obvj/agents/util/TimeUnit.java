@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Enumerates the supported time units for Timer agents execution.
  *
@@ -11,12 +13,33 @@ import java.util.List;
  */
 public enum TimeUnit
 {
-    SECONDS(java.util.concurrent.TimeUnit.SECONDS, Calendar.SECOND, Arrays.asList("second", "seconds", "s"),
+    /**
+     * Time unit representing one second
+     */
+    SECONDS(java.util.concurrent.TimeUnit.SECONDS,
+            Calendar.SECOND,
+            Arrays.asList("second", "seconds", "second(s)", "s"),
             "second(s)"),
-    MINUTES(java.util.concurrent.TimeUnit.MINUTES, Calendar.MINUTE, Arrays.asList("minute", "minutes", "m"),
-            "minute(s)"),
-    HOURS(java.util.concurrent.TimeUnit.HOURS, Calendar.HOUR_OF_DAY, Arrays.asList("hour", "hours", "h"), "hour(s)");
 
+    /**
+     * Time unit representing sixty second
+     */
+    MINUTES(java.util.concurrent.TimeUnit.MINUTES,
+            Calendar.MINUTE,
+            Arrays.asList("minute", "minutes", "minute(s)", "m"),
+            "minute(s)"),
+
+    /**
+     * Time unit representing sixty minutes
+     */
+    HOURS(java.util.concurrent.TimeUnit.HOURS,
+            Calendar.HOUR_OF_DAY,
+            Arrays.asList("hour", "hours", "hour(s)", "h"),
+            "hour(s)");
+
+    /**
+     * The default time unit
+     */
     public static final TimeUnit DEFAULT = TimeUnit.MINUTES;
 
     private final java.util.concurrent.TimeUnit javaTimeUnit;
@@ -24,13 +47,12 @@ public enum TimeUnit
     private final List<String> identifiers;
     private final String displayText;
 
-    private TimeUnit(java.util.concurrent.TimeUnit javaTimeUnit, int calendarField, List<String> aliases,
-            String strText)
+    private TimeUnit(java.util.concurrent.TimeUnit javaTimeUnit, int calendarConstant, List<String> identifiers, String displayText)
     {
         this.javaTimeUnit = javaTimeUnit;
-        this.calendarConstant = calendarField;
-        this.identifiers = aliases;
-        this.displayText = strText;
+        this.calendarConstant = calendarConstant;
+        this.identifiers = identifiers;
+        this.displayText = displayText;
     }
 
     /**
@@ -38,26 +60,36 @@ public enum TimeUnit
      * <p>
      * For example, all of the following strings match to {@link TimeUnit#SECONDS}:
      * <ul>
+     * <li>s, S</li>
      * <li>second, SECOND</li>
      * <li>seconds, SECONDS</li>
-     * <li>s, S</li>
      * </ul>
      *
      * @param identifier a string that identified a Time Unit
-     * @return a {@link TimeUnit}, always
+     * @return a {@link TimeUnit}, not null
      * @throws IllegalArgumentException if no time unit matches the given identifier
      */
     public static TimeUnit findByIdentifier(String identifier)
     {
-        return Arrays.stream(TimeUnit.values()).filter(timeUnit -> isTimeUnitIdentifiableBy(identifier, timeUnit))
+        return Arrays.stream(TimeUnit.values())
+                .filter(timeUnit -> timeUnit.isIdentifiableBy(identifier))
                 .findFirst()
                 .orElseThrow(() -> Exceptions.illegalArgument("Invalid time unit identifier: \"%s\"", identifier));
     }
 
-    private static boolean isTimeUnitIdentifiableBy(String identifier, TimeUnit timeUnit)
+    /**
+     * Checks a given string against a list of known identifiers for a {@code TimeUnit},
+     * returning {@code true} if a match is found.
+     *
+     * @param identifier the identifier to be checked
+     * @return {@code true} if this {@code TimeUnit} is identifiable by the given identifier;
+     *         {@code false}, otherwise.
+     */
+    public boolean isIdentifiableBy(String identifier)
     {
-        return timeUnit.identifiers.stream()
-                .anyMatch(timeUnitIdentifier -> timeUnitIdentifier.equalsIgnoreCase(identifier));
+        return StringUtils.isNotEmpty(identifier)
+                && identifiers.stream()
+                              .anyMatch(timeUnitIdentifier -> timeUnitIdentifier.equalsIgnoreCase(identifier));
     }
 
     /**
@@ -71,11 +103,9 @@ public enum TimeUnit
     }
 
     /**
-     * Returns a human-friendly string representation of this {@link TimeInterval}, for
-     * example: {@code "1 MINUTE"}.
+     * Returns a string representation of this {@code TimeUnit}.
      *
      * @return the string representation of this object
-     * @see Object#toString()
      */
     @Override
     public String toString()
@@ -84,11 +114,10 @@ public enum TimeUnit
     }
 
     /**
-     * Converts the given time duration to milliseconds.
+     * Converts the given amount into milliseconds.
      *
-     * @param amount the time duration to be converted
-     * @return the converted amount
-     * @since 2.0
+     * @param amount the amount to be converted
+     * @return the amount converted into milliseconds
      */
     public long toMillis(long amount)
     {

@@ -1,4 +1,4 @@
-package net.obvj.agents.dummy;
+package net.obvj.agents.test.agents.valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

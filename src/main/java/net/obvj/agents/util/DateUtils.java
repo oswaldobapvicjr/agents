@@ -3,6 +3,7 @@ package net.obvj.agents.util;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -13,7 +14,9 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  */
 public class DateUtils
 {
-    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    protected static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    protected static final String NULL_STRING = "null";
+
 
     private DateUtils()
     {
@@ -21,7 +24,9 @@ public class DateUtils
     }
 
     /**
-     * @return current date and time.
+     * Returns the current date-time as a {@link ZonedDateTime}, using the system clock.
+     *
+     * @return a {@link ZonedDateTime} for the current date-time, not null
      */
     public static ZonedDateTime now()
     {
@@ -29,99 +34,125 @@ public class DateUtils
     }
 
     /**
-     * @return current date and time, formatted
-     */
-    public static String formattedCurrentDate()
-    {
-        return formatDate(now());
-    }
-
-    /**
-     * Formats the given calendar using internally standardized date format
+     * Formats the given calendar using a standardized date format.
      *
      * @param calendar the calendar to be formatted
      * @return a formatted string
      */
     public static String formatDate(Calendar calendar)
     {
-        return calendar != null ? formatDate(calendar.getTime()) : "null";
+        return calendar != null ? formatDate(calendar.getTime()) : NULL_STRING;
     }
 
     /**
-     * Formats the given {@link ZonedDateTime} using internally standardized date format
+     * Formats the given {@link ZonedDateTime} using a standardized date format.
      *
      * @param zonedDateTime the object to be formatted
      * @return a formatted string
      */
     public static String formatDate(ZonedDateTime zonedDateTime)
     {
-        return zonedDateTime != null ? formatDate(Date.from(zonedDateTime.toInstant())) : "null";
+        return zonedDateTime != null ? formatDate(Date.from(zonedDateTime.toInstant())) : NULL_STRING;
     }
 
     /**
-     * Formats the given date using internally standardized date format
+     * Formats the given date using a standardized date format.
      *
      * @param date the date to be formatted
      * @return a formatted string
      */
     public static String formatDate(Date date)
     {
-        return date != null ? DateFormatUtils.format(date, DEFAULT_DATE_FORMAT) : "null";
+        return date != null ? DateFormatUtils.format(date, DEFAULT_DATE_FORMAT) : NULL_STRING;
     }
 
     /**
-     * Return the first start date for a given interval in minutes.
-     * <p>
-     * For example: if current time is 23:38:26 (MM:SS:mi), and the interval is set to 1, the
-     * adjusted date will be 23:39:00.
-     *
-     * @param intervalInMinutes the interval in minutes for the first start date
-     * @return the adjusted start date for the given interval in minutes
-     */
-    public static Date getExactStartDateEveryMinute(int intervalInMinutes)
-    {
-        return getExactStartDateEveryMinute(intervalInMinutes, Calendar.getInstance());
-    }
-
-    protected static Date getExactStartDateEveryMinute(int intervalInMinutes, Calendar baseCalendar)
-    {
-        return getExactStartDateEvery(intervalInMinutes, TimeUnit.MINUTES, baseCalendar);
-    }
-
-    /**
-     * Return the first start date for a given interval and time unit.
+     * Return the next exact date for a given interval and time unit after the current time.
      * <p>
      * For example:
      * <ul>
-     * <li>if current time is 23:38:26 (MM:SS:mi), and the interval is set to 1 with
-     * {@code TimeUnit.MINUTES}, the adjusted date will be 23:39:00</li>
+     * <li>if current time is 23:38:26 (MM:SS:mi), and the interval is set to <strong>30
+     * seconds</strong>, the return will be 23:28:30</li>
      *
-     * <li>if current time is 23:38:26 (MM:SS:mi), and the interval is set to 1 with
-     * {@code TimeUnit.HOURS}, the adjusted date will be 00:00:00 (next day)</li>
+     * <li>if current time is 23:38:26 (MM:SS:mi), and the interval is set to <strong>1
+     * minute</strong>, the return will be 23:39:00</li>
+     *
+     * <li>if current time is 23:38:26 (MM:SS:mi), and the interval is set to <strong>1
+     * hour</strong>, the return will be 00:00:00 (next day)</li>
      * </ul>
      *
-     * @param interval the interval for the first start date
+     * @param interval the maximum interval for each execution
      * @param timeUnit the given interval's time unit
-     * @return the adjusted start date for the given interval and time unit
+     * @return the next exact date for the given interval and time unit
      */
-    public static Date getExactStartDateEvery(int interval, TimeUnit timeUnit)
+    public static Date getNextExactDateEveryInterval(int interval, TimeUnit timeUnit)
     {
-        return getExactStartDateEvery(interval, timeUnit, Calendar.getInstance());
+        return getNextExactDateEveryInterval(interval, timeUnit, Calendar.getInstance());
     }
 
-    @SuppressWarnings("squid:S128")
-    protected static Date getExactStartDateEvery(int interval, TimeUnit timeUnit, Calendar baseCalendar)
+    /**
+     * Return the next exact date given a specific interval and time unit after the specified
+     * date.
+     * <p>
+     * For example:
+     * <ul>
+     * <li>if the source time is 23:38:26 (MM:SS:mi), and the interval is set to <strong>30
+     * seconds</strong>, the return will be 23:28:30</li>
+     *
+     * <li>if the source time is 23:38:26 (MM:SS:mi), and the interval is set to <strong>1
+     * minute</strong>, the return will be 23:39:00</li>
+     *
+     * <li>if the source time is 23:38:26 (MM:SS:mi), and the interval is set to <strong>1
+     * hour</strong>, the return will be 00:00:00 (next day)</li>
+     * </ul>
+     *
+     * @param interval the maximum interval for each execution
+     * @param timeUnit the given interval's time unit
+     * @param date     the source {@link Date} to be processed
+     * @return the next date for the given interval and time unit
+     */
+    public static Date getNextExactDateEveryInterval(int interval, TimeUnit timeUnit, Date date)
     {
-        Calendar start = (Calendar) baseCalendar.clone();
+        Objects.requireNonNull(date, "The source date must not be null");
+        Calendar calendar = toCalendar(date);
+        return getNextExactDateEveryInterval(interval, timeUnit, calendar);
+    }
 
-        int time = baseCalendar.get(timeUnit.getCalendarConstant());
+    /**
+     * Return the next exact date given a specific interval and time unit after the specified
+     * {@link Calendar} instance.
+     * <p>
+     * For example:
+     * <ul>
+     * <li>if the source time is 23:38:26 (MM:SS:mi), and the interval is set to <strong>30
+     * seconds</strong>, the return will be 23:28:30</li>
+     *
+     * <li>if the source time is 23:38:26 (MM:SS:mi), and the interval is set to <strong>1
+     * minute</strong>, the return will be 23:39:00</li>
+     *
+     * <li>if the source time is 23:38:26 (MM:SS:mi), and the interval is set to <strong>1
+     * hour</strong>, the return will be 00:00:00 (next day)</li>
+     * </ul>
+     *
+     * @param interval the maximum interval for each execution
+     * @param timeUnit the given interval's time unit
+     * @param calendar the source {@link Calendar} instance
+     * @return the next date for the given interval and time unit
+     */
+    @SuppressWarnings("squid:S128")
+    public static Date getNextExactDateEveryInterval(int interval, TimeUnit timeUnit, Calendar calendar)
+    {
+        Objects.requireNonNull(calendar, "The source calendar must not be null");
+        Calendar nextDate = getClonedCalendar(calendar);
+
+        int time = calendar.get(timeUnit.getCalendarConstant());
         int timeDiff = (time % interval == 0) ? 0 : interval - time % interval;
 
-        start.add(timeUnit.getCalendarConstant(), timeDiff);
+        nextDate.add(timeUnit.getCalendarConstant(), timeDiff);
 
-        if (start.before(baseCalendar) || start.equals(baseCalendar))
+        if (nextDate.before(calendar) || nextDate.equals(calendar))
         {
-            start.add(timeUnit.getCalendarConstant(), interval);
+            nextDate.add(timeUnit.getCalendarConstant(), interval);
         }
 
         switch (timeUnit)
@@ -129,22 +160,32 @@ public class DateUtils
         // NOTE: It is safe to ignore SonarQube squid:S128 here
         // We really want to continue executing the statements of the subsequent cases on purpose
         case HOURS:
-            start.set(Calendar.MINUTE, 0);
+            nextDate.set(Calendar.MINUTE, 0);
         case MINUTES:
-            start.set(Calendar.SECOND, 0);
+            nextDate.set(Calendar.SECOND, 0);
         case SECONDS:
-            start.set(Calendar.MILLISECOND, 0);
+            nextDate.set(Calendar.MILLISECOND, 0);
         }
 
-        return start.getTime();
+        return nextDate.getTime();
     }
 
     /**
-     * Creates and returns a copy of the given calendar object.
+     * Creates and returns a clone of the given calendar object.
+     *
+     * @param calendar the source {@link Calendar}
+     * @return a copy of the given calendar instance
      */
-    public static Calendar getClonedDate(Calendar calendar)
+    public static Calendar getClonedCalendar(Calendar calendar)
     {
         return calendar != null ? (Calendar) calendar.clone() : null;
+    }
+
+    private static Calendar toCalendar(Date date)
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
     }
 
 }

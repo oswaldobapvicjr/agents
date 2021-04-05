@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
  */
 public class TimeInterval
 {
+    private static final String EMPTY_STRING = "";
     private static final Pattern DIGITS_GROUP_PATTERN = Pattern.compile("\\d+");
     private static final Pattern LETTERS_GROUP_PATTERN = Pattern.compile("[a-zA-Z]+");
 
@@ -33,7 +34,8 @@ public class TimeInterval
     /**
      * Builds a new TimeInterval with the same attributes from a preset object.
      *
-     * @param source the source object to be copied
+     * @param source the source object to be copied; not null
+     * @throws NullPointerException if the source TimeInterval is null
      */
     public TimeInterval(TimeInterval source)
     {
@@ -53,11 +55,12 @@ public class TimeInterval
      *
      * @param input the string to be parsed
      * @return a TimerInteral from the given input
+     * @throws IllegalArgumentException if the string is not in a valid TimeInterval format
      */
     public static TimeInterval of(String input)
     {
-        int digits = extractFirstDigitGroupFromString(input);
-        String timeUnitDescription = extractFirstLetterGroupFromString(input);
+        int digits = extractFirstDigitGroupFrom(input);
+        String timeUnitDescription = extractFirstLetterGroupFrom(input);
 
         TimeUnit timeUnit = timeUnitDescription.isEmpty() ? TimeUnit.DEFAULT
                 : TimeUnit.findByIdentifier(timeUnitDescription);
@@ -71,10 +74,11 @@ public class TimeInterval
      * For example: the following call {@code extractFirstDigitGroupFromString("15s")} returns
      * {@code "15"}.
      *
-     * @param input the source string
+     * @param input the source string; not null
      * @return the first group of digits found in the input string, as integer
+     * @throws IllegalArgumentException if no digit found in the input string
      */
-    protected static int extractFirstDigitGroupFromString(String input)
+    protected static int extractFirstDigitGroupFrom(String input)
     {
         Matcher matcher = DIGITS_GROUP_PATTERN.matcher(input);
         if (matcher.find())
@@ -93,14 +97,14 @@ public class TimeInterval
      * @param input the source string
      * @return the first group of letters found in the input string
      */
-    protected static String extractFirstLetterGroupFromString(String input)
+    protected static String extractFirstLetterGroupFrom(String input)
     {
         Matcher matcher = LETTERS_GROUP_PATTERN.matcher(input);
         if (matcher.find())
         {
             return matcher.group(0);
         }
-        return "";
+        return EMPTY_STRING;
     }
 
     /**
@@ -135,7 +139,7 @@ public class TimeInterval
 
     /**
      * Returns a human-friendly string representation of this {@link TimeInterval}, for
-     * example: {@code "1 MINUTE"}.
+     * example: {@code "2 minute(s)"}.
      *
      * @return the string representation of this object
      * @see Object#toString()
@@ -164,8 +168,14 @@ public class TimeInterval
     @Override
     public boolean equals(Object obj)
     {
-        if (this == obj) return true;
-        if (!(obj instanceof TimeInterval)) return false;
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof TimeInterval))
+        {
+            return false;
+        }
         TimeInterval other = (TimeInterval) obj;
         return duration == other.duration && timeUnit == other.timeUnit;
     }

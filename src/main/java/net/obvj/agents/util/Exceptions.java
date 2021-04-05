@@ -93,6 +93,18 @@ public final class Exceptions
     }
 
     /**
+     * Creates an {@link AgentRuntimeException} with a formatted message.
+     *
+     * @param format See {@link String#format(String, Object...)}
+     * @param args   See {@link String#format(String, Object...)}
+     * @return an {@link AgentRuntimeException} with a formatted message
+     */
+    public static AgentRuntimeException agentRuntime(final String format, final Object... args)
+    {
+        return new AgentRuntimeException(String.format(format, args));
+    }
+
+    /**
      * Creates an {@link AgentRuntimeException} with a cause and a formatted message.
      *
      * @param cause  the cause to be set

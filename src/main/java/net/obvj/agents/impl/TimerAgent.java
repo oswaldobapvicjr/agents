@@ -62,7 +62,7 @@ public abstract class TimerAgent extends AbstractAgent
         LOG.info("Starting agent: {}", getName());
         LOG.info("Agent {} scheduled to run every {}.", getName(), interval);
 
-        Date start = DateUtils.getExactStartDateEvery(interval.getDuration(), interval.getTimeUnit());
+        Date start = DateUtils.getNextExactDateEveryInterval(interval.getDuration(), interval.getTimeUnit());
         schedule.scheduleAtFixedRate(this, (start.getTime() - System.currentTimeMillis()), interval.toMillis(),
                 java.util.concurrent.TimeUnit.MILLISECONDS);
 

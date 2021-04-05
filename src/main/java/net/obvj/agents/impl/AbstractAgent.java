@@ -144,7 +144,7 @@ public abstract class AbstractAgent implements Runnable
      */
     public Calendar getStartDate()
     {
-        return DateUtils.getClonedDate(startDate);
+        return DateUtils.getClonedCalendar(startDate);
     }
 
     /**
@@ -152,7 +152,7 @@ public abstract class AbstractAgent implements Runnable
      */
     public Calendar getLastRunDate()
     {
-        return DateUtils.getClonedDate(lastExecutionDate);
+        return DateUtils.getClonedCalendar(lastExecutionDate);
     }
 
     /**

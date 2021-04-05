@@ -13,23 +13,40 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 import net.obvj.agents.exception.AgentConfigurationException;
 
+/**
+ * Utility methods for working with annotations and package scanning.
+ *
+ * @author oswaldo.bapvic.jr
+ */
 public class AnnotationUtils
 {
     private AnnotationUtils()
     {
-        throw new IllegalStateException("Utility class");
+        throw new IllegalStateException("Instantiation not allowed");
+    }
+
+    public static Method getSinglePublicAndZeroArgumentMethodWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass)
+    {
+        Method method = getSinglePublicMethodWithAnnotation(clazz, annotationClass);
+        int parameterCount = method.getParameterCount();
+        if (parameterCount != 0)
+        {
+            throw Exceptions.agentConfiguration("The method with @%s annotation contains %s parameter(s).",
+                    annotationClass.getSimpleName(), parameterCount);
+        }
+        return method;
     }
 
     /**
-     * Returns the method of the given class that is annotated with the given annotation,
+     * Returns the public method of the given class that is annotated with the given annotation,
      * provided that only a single method containing this annotation exists in the class.
      *
      * @param class           the {@link Class} to query
      * @param annotationClass the annotation that must be present on a method to be matched
-     * @return a {@link Method}
+     * @return a {@link Method} which is annotated with the specified annotation class
      * @throws AgentConfigurationException if either no method or more than one method found
      */
-    public static Method getSingleMethodWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass)
+    public static Method getSinglePublicMethodWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass)
     {
         List<Method> agentTaskMethods = MethodUtils.getMethodsListWithAnnotation(clazz, annotationClass);
 
@@ -54,7 +71,7 @@ public class AnnotationUtils
      * @param annotationClass        the annotation to be filter
      * @param basePackage            the package to check for annotated classes
      * @param additionalBasePackages (optional) additional base packages to check
-     * @return a set of auto-detected class names
+     * @return a set of auto-detected class names; or an empty set
      */
     public static Set<String> findClassesWithAnnotation(Class<? extends Annotation> annotationClass, String basePackage)
     {
