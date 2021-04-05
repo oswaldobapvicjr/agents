@@ -84,7 +84,7 @@ public class AnnotationUtils
      * annotation.
      *
      * @param annotationClass        the annotation to be filter
-     * @param basePackage            the package to check for annotated classes
+     * @param basePackage            the package to search for annotated classes
      * @param additionalBasePackages (optional) additional base packages to check
      * @return a set of auto-detected class names; or an empty set
      */

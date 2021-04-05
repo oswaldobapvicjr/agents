@@ -26,22 +26,29 @@ public class AnnotatedAgentScanner
 
     private AnnotatedAgentScanner()
     {
-        throw new IllegalStateException("Utility class");
+        throw new IllegalStateException("Instantiation not allowed");
     }
 
     /**
-     * @return a {@link Map} of {@link AgentConfiguration} by annotated class name
+     * Scans the specified base package for agents.
+     *
+     * @param basePackage the package to search for annotated classes
+     * @return a {@link Set} of {@link AgentConfiguration} objects from the objects found in
+     *         the specified package
      */
-    public static Map<String, AgentConfiguration> scanPackage(String basePackage)
+    public static Set<AgentConfiguration> scanPackage(String basePackage)
     {
-        Map<String, AgentConfiguration> agentsByClassName = new HashMap<>();
         Set<String> classNames = findAnnotatedAgentClasses(basePackage);
-        Set<Class<?>> classes = classNames.stream().map(AnnotatedAgentScanner::toClass).collect(Collectors.toSet());
-        classes.forEach(clazz -> agentsByClassName.put(clazz.getName(), AgentConfiguration.fromAnnotatedClass(clazz)));
-        return agentsByClassName;
+        return classNames.stream()
+                         .map(AnnotatedAgentScanner::toClass)
+                         .map(AgentConfiguration::fromAnnotatedClass)
+                         .collect(Collectors.toSet());
     }
 
     /**
+     * Scans the specified base package for candidate agents.
+     *
+     * @param basePackage the package to search for annotated classes
      * @returns a list of candidate class names found in class path with the {@code @Agent}
      *          annotation
      */

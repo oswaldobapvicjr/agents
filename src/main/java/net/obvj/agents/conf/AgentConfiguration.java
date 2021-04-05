@@ -1,9 +1,5 @@
 package net.obvj.agents.conf;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-
 import org.apache.commons.lang3.StringUtils;
 
 import net.obvj.agents.AgentType;
@@ -16,25 +12,12 @@ import net.obvj.agents.util.Exceptions;
  *
  * @author oswaldo.bapvic.jr
  */
-@XmlAccessorType(XmlAccessType.FIELD)
 public class AgentConfiguration
 {
-    @XmlElement(name = "name")
     private String name;
-
-    @XmlElement(name = "type")
     private AgentType type;
-
-    @XmlElement(name = "class")
     private String agentClass;
-
-    @XmlElement(name = "interval")
     private String interval;
-
-    public AgentConfiguration()
-    {
-        // Required by JAXB to create an AgentConfiguration from XML
-    }
 
     private AgentConfiguration(Builder builder)
     {
@@ -101,17 +84,17 @@ public class AgentConfiguration
 
         public AgentConfiguration build()
         {
-            if (StringUtils.isEmpty(name))
+            if (StringUtils.isEmpty(agentClass))
             {
-                throw new IllegalStateException("name cannot be empty");
+                throw new AgentConfigurationException("agentClass cannot be null");
             }
             if (type == null)
             {
                 throw new AgentConfigurationException("type cannot be null");
             }
-            if (StringUtils.isEmpty(agentClass))
+            if (StringUtils.isEmpty(name))
             {
-                throw new AgentConfigurationException("agentClass cannot be null");
+                name = StringUtils.defaultIfEmpty(name, agentClass);
             }
             if (StringUtils.isEmpty(interval))
             {
@@ -136,7 +119,7 @@ public class AgentConfiguration
 
         AgentType type = annotation.type();
         String agentClass = clazz.getCanonicalName();
-        String frequency = annotation.frequency();
+        String frequency = annotation.interval();
 
         Builder builder = new Builder(type).name(name).agentClass(agentClass).interval(frequency);
         return builder.build();
@@ -147,5 +130,8 @@ public class AgentConfiguration
     {
         return new StringBuilder("AgentConfiguration (class=").append(agentClass).append(")").toString();
     }
+
+
+    // TODO: equals and hashCode (this object is handled inside a HashSet)
 
 }

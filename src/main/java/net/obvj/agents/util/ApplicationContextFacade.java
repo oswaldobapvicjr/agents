@@ -1,4 +1,4 @@
-package net.obvj.agents.impl;
+package net.obvj.agents.util;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -14,7 +14,7 @@ public class ApplicationContextFacade
 
     private ApplicationContextFacade()
     {
-        throw new IllegalStateException("Utility class");
+        throw new IllegalStateException("Instantiation not allowed");
     }
 
     /**

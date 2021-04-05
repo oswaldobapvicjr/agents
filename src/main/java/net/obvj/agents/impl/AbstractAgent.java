@@ -49,11 +49,11 @@ public abstract class AbstractAgent implements Runnable
     protected Calendar startDate;
 
     /*
-     * Stores the date & time when this agent task was last executed
+     * The date & time when this agent task was last executed
      */
-    protected Calendar lastExecutionDate;
+    protected Calendar lastRun;
 
-    protected Duration lastExecutionDuration;
+    protected Duration lastRunDuration;
 
     /**
      * A history of most recent execution durations, in seconds.
@@ -152,7 +152,7 @@ public abstract class AbstractAgent implements Runnable
      */
     public Calendar getLastRunDate()
     {
-        return DateUtils.getClonedCalendar(lastExecutionDate);
+        return DateUtils.getClonedCalendar(lastRun);
     }
 
     /**
@@ -234,14 +234,14 @@ public abstract class AbstractAgent implements Runnable
             synchronized (runLock)
             {
                 setState(State.RUNNING);
-                lastExecutionDate = Calendar.getInstance();
+                lastRun = Calendar.getInstance();
                 LOG.debug("Running agent...");
                 try
                 {
                     Stopwatch stopwatch = Stopwatch.createStarted(Counter.Type.WALL_CLOCK_TIME);
                     runTask();
                     updateStatistics(stopwatch.elapsedTime(Counter.Type.WALL_CLOCK_TIME));
-                    LOG.debug("Agent finished in {}", lastExecutionDuration);
+                    LOG.debug("Agent finished in {}", lastRunDuration);
                     afterRun();
                 }
                 catch (Exception exception)
@@ -258,8 +258,8 @@ public abstract class AbstractAgent implements Runnable
 
     private void updateStatistics(Duration duration)
     {
-        this.lastExecutionDuration = duration;
-        executionDurationHistory.offer(lastExecutionDuration);
+        this.lastRunDuration = duration;
+        executionDurationHistory.offer(lastRunDuration);
     }
 
     /**
@@ -268,13 +268,13 @@ public abstract class AbstractAgent implements Runnable
      *
      * @return a string containing the average of execution durations, or {@code "null"}
      */
-    protected String formatAverageExecutionDuration()
+    protected String formatAverageRunDuration()
     {
-        Duration average = getAverageExecutionDuration();
+        Duration average = getAverageRunDuration();
         return average != null ? average.toString() : "null";
     }
 
-    public Duration getAverageExecutionDuration()
+    public Duration getAverageRunDuration()
     {
         return DurationUtils.average(new ArrayList<>(executionDurationHistory));
     }
@@ -284,9 +284,9 @@ public abstract class AbstractAgent implements Runnable
      *
      * @return the formatted duration, or {@code "null"}
      */
-    protected String formatLastExecutionDuration()
+    protected String formatLastRunDuration()
     {
-        return lastExecutionDuration != null ? lastExecutionDuration.toString(DurationFormat.SHORT) : "null";
+        return lastRunDuration != null ? lastRunDuration.toString(DurationFormat.SHORT) : "null";
     }
 
     /**

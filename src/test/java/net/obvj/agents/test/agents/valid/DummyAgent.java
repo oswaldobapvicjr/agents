@@ -12,7 +12,7 @@ import net.obvj.agents.annotation.Run;
  *
  * @author oswaldo.bapvic.jr
  */
-@Agent(type = AgentType.TIMER, frequency = "5 seconds")
+@Agent(type = AgentType.TIMER, interval = "5 seconds")
 public class DummyAgent
 {
     private static final Logger LOG = LoggerFactory.getLogger(DummyAgent.class);

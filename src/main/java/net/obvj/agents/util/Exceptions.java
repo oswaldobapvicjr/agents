@@ -12,7 +12,7 @@ public final class Exceptions
 {
     private Exceptions()
     {
-        throw new IllegalStateException("Utility class");
+        throw new IllegalStateException("Instantiation not allowed");
     }
 
     /**

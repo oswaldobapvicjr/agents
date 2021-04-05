@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * shutdown.
  *
  * @author oswaldo.bapvic.jr
- * @since 2.0
  */
 public class AgentThreadFactory implements ThreadFactory
 {

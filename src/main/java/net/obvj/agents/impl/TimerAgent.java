@@ -97,10 +97,10 @@ public abstract class TimerAgent extends AbstractAgent
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.JSON_STYLE);
         builder.append("name", getName()).append("type", getType()).append("status", getState())
                 .append("startDate", (DateUtils.formatDate(startDate)))
-                .append("lastExecutionStartDate", (DateUtils.formatDate(lastExecutionDate)))
-                .append("lastExecutionDuration", formatLastExecutionDuration())
-                .append("averageExecutionDuration", formatAverageExecutionDuration())
-                .append("frequency", interval);
+                .append("lastExecutionStartDate", (DateUtils.formatDate(lastRun)))
+                .append("lastExecutionDuration", formatLastRunDuration())
+                .append("averageExecutionDuration", formatAverageRunDuration())
+                .append("interval", interval);
         return builder.build();
     }
 

@@ -19,8 +19,7 @@ public @interface Agent
     /**
      * The agent name.
      * <p>
-     * If not specified, the name of this Agent will be the simple name of the class being
-     * annotated.
+     * If not specified, the agent name will be equal to the canonical class name.
      */
     String name() default "";
 
@@ -32,10 +31,10 @@ public @interface Agent
     AgentType type() default AgentType.TIMER;
 
     /**
-     * The frequency of the task.
+     * The interval between executions.
      * <p>
-     * If not specified, the default interval of 1 minute will be considered.
+     * If not specified, a default interval will be considered.
      */
-    String frequency() default "";
+    String interval() default "";
 
 }

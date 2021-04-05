@@ -29,7 +29,6 @@ import net.obvj.agents.util.DateUtils;
  * service available in Unix/Linux systems.
  *
  * @author oswaldo.bapvic.jr
- * @since 2.0
  */
 public abstract class CronAgent extends AbstractAgent
 {
@@ -146,9 +145,9 @@ public abstract class CronAgent extends AbstractAgent
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.JSON_STYLE);
         builder.append("name", getName()).append("type", getType()).append("status", getState())
                 .append("startDate", (DateUtils.formatDate(startDate)))
-                .append("lastExecutionStartDate", (DateUtils.formatDate(lastExecutionDate)))
-                .append("lastExecutionDuration", formatLastExecutionDuration())
-                .append("averageExecutionDuration", formatAverageExecutionDuration())
+                .append("lastExecutionStartDate", (DateUtils.formatDate(lastRun)))
+                .append("lastExecutionDuration", formatLastRunDuration())
+                .append("averageExecutionDuration", formatAverageRunDuration())
                 .append("cronExpression", cronExpression).append("cronDescription", cronDescription)
                 .append("nextExecutionDate", DateUtils.formatDate(nextExecutionDate));
         return builder.build();

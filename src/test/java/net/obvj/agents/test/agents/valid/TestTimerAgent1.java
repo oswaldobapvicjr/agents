@@ -4,7 +4,7 @@ import net.obvj.agents.AgentType;
 import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.annotation.Run;
 
-@Agent(type = AgentType.TIMER, frequency = "10 minutes")
+@Agent(type = AgentType.TIMER, interval = "10 minutes")
 public class TestTimerAgent1
 {
     @Run

@@ -19,7 +19,7 @@ import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.conf.AnnotatedAgentScanner;
 import net.obvj.agents.impl.AbstractAgent;
 import net.obvj.agents.impl.AgentFactory;
-import net.obvj.agents.impl.ApplicationContextFacade;
+import net.obvj.agents.util.ApplicationContextFacade;
 import net.obvj.agents.util.Exceptions;
 
 /**
@@ -49,7 +49,7 @@ public class AgentManager
      */
     public void scanPackage(String basePackage)
     {
-        Collection<AgentConfiguration> agentCandidates = AnnotatedAgentScanner.scanPackage(basePackage).values();
+        Collection<AgentConfiguration> agentCandidates = AnnotatedAgentScanner.scanPackage(basePackage);
 
         LOG.info("Instantiating agent(s)...");
 
