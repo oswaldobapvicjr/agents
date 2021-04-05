@@ -19,12 +19,6 @@ import net.obvj.agents.util.Exceptions;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AgentConfiguration
 {
-    protected static final String TYPE_TIMER = "timer";
-    protected static final String TYPE_CRON = "cron";
-
-    protected static final String DEFAULT_FREQUENCY_TIMER = "1";
-    protected static final String DEFAULT_FREQUENCY_CRON = "* * * * *";
-
     @XmlElement(name = "name")
     private String name;
 
@@ -34,11 +28,12 @@ public class AgentConfiguration
     @XmlElement(name = "class")
     private String agentClass;
 
-    @XmlElement(name = "frequency")
-    private String frequency = DEFAULT_FREQUENCY_TIMER;
+    @XmlElement(name = "interval")
+    private String interval;
 
     public AgentConfiguration()
     {
+        // Required by JAXB to create an AgentConfiguration from XML
     }
 
     private AgentConfiguration(Builder builder)
@@ -46,7 +41,7 @@ public class AgentConfiguration
         this.name = builder.name;
         this.type = builder.type;
         this.agentClass = builder.agentClass;
-        this.frequency = builder.frequency;
+        this.interval = builder.interval;
     }
 
     public String getName()
@@ -64,9 +59,9 @@ public class AgentConfiguration
         return agentClass;
     }
 
-    public String getFrequency()
+    public String getInterval()
     {
-        return frequency;
+        return interval;
     }
 
     /**
@@ -79,7 +74,7 @@ public class AgentConfiguration
         private String name;
         private AgentType type;
         private String agentClass;
-        private String frequency;
+        private String interval;
 
         public Builder(AgentType type)
         {
@@ -98,9 +93,9 @@ public class AgentConfiguration
             return this;
         }
 
-        public Builder frequency(String frequency)
+        public Builder interval(String interval)
         {
-            this.frequency = frequency;
+            this.interval = interval;
             return this;
         }
 
@@ -108,7 +103,7 @@ public class AgentConfiguration
         {
             if (StringUtils.isEmpty(name))
             {
-                throw new IllegalStateException("name cannot be null");
+                throw new IllegalStateException("name cannot be empty");
             }
             if (type == null)
             {
@@ -118,24 +113,11 @@ public class AgentConfiguration
             {
                 throw new AgentConfigurationException("agentClass cannot be null");
             }
-            if (StringUtils.isEmpty(frequency))
+            if (StringUtils.isEmpty(interval))
             {
-                frequency = getDefaultFrequency();
+                interval = type.getDefaultInterval();
             }
             return new AgentConfiguration(this);
-        }
-
-        private String getDefaultFrequency()
-        {
-            if (type == AgentType.TIMER)
-            {
-                return DEFAULT_FREQUENCY_TIMER;
-            }
-            if (type == AgentType.CRON)
-            {
-                return DEFAULT_FREQUENCY_CRON;
-            }
-            return StringUtils.EMPTY;
         }
 
     }
@@ -156,7 +138,7 @@ public class AgentConfiguration
         String agentClass = clazz.getCanonicalName();
         String frequency = annotation.frequency();
 
-        Builder builder = new Builder(type).name(name).agentClass(agentClass).frequency(frequency);
+        Builder builder = new Builder(type).name(name).agentClass(agentClass).interval(frequency);
         return builder.build();
     }
 

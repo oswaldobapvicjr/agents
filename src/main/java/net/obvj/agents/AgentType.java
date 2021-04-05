@@ -13,25 +13,29 @@ public enum AgentType
      * An object that runs a particular task periodically, given a configurable interval in
      * seconds, minutes, or hours.
      */
-    TIMER("timer"),
+    TIMER("1 minute"),
 
     /**
      * An object that runs a particular task at specified times and dates, similar to the Cron
      * service available in Unix/Linux systems.
      */
-    CRON("cron");
+    CRON("* * * * *");
 
-    private final String value;
+    private final String defaultInterval;
 
-    private AgentType(String value)
+    private AgentType(String defaultInterval)
     {
-        this.value = value;
+        this.defaultInterval = defaultInterval;
     }
 
-    @Override
-    public String toString()
+    /**
+     * Returns the default interval for an agent type.
+     *
+     * @return the default interval
+     */
+    public String getDefaultInterval()
     {
-        return value;
+        return defaultInterval;
     }
 
 }

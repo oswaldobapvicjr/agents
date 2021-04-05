@@ -58,7 +58,7 @@ public abstract class CronAgent extends AbstractAgent
             throw new IllegalArgumentException("Not a cron agent");
         }
 
-        String originalExpression = configuration.getFrequency();
+        String originalExpression = configuration.getInterval();
         cron = parseCron(originalExpression);
         cronExpression = cron.asString();
         cronDescription = CronDescriptor.instance().describe(cron);
