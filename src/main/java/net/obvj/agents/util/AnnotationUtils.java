@@ -25,28 +25,43 @@ public class AnnotationUtils
         throw new IllegalStateException("Instantiation not allowed");
     }
 
-    public static Method getSinglePublicAndZeroArgumentMethodWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass)
+    /**
+     * Returns the public method of the given class that is annotated with the given
+     * annotation, provided that only a single method containing this annotation exists in the
+     * class, and the referenced method has no parameters.
+     *
+     * @param annotationClass the annotation that must be present on a method to be matched
+     * @param sourceClass     the {@link Class} to query
+     * @return a {@link Method} which is annotated with the specified annotation
+     * @throws AgentConfigurationException if either no method or more than one method found,
+     *                                     or if the method found contains parameters
+     */
+    public static Method getSinglePublicAndZeroArgumentMethodWithAnnotation(Class<? extends Annotation> annotationClass,
+            Class<?> sourceClass)
     {
-        Method method = getSinglePublicMethodWithAnnotation(clazz, annotationClass);
+        Method method = getSinglePublicMethodWithAnnotation(annotationClass, sourceClass);
         int parameterCount = method.getParameterCount();
         if (parameterCount != 0)
         {
-            throw Exceptions.agentConfiguration("The method with @%s annotation contains %s parameter(s).",
+            throw Exceptions.agentConfiguration(
+                    "The method with @%s annotation contains %s parameter(s). No parameter is allowed.",
                     annotationClass.getSimpleName(), parameterCount);
         }
         return method;
     }
 
     /**
-     * Returns the public method of the given class that is annotated with the given annotation,
-     * provided that only a single method containing this annotation exists in the class.
+     * Returns the public method of the given class that is annotated with the given
+     * annotation, provided that only a single method containing this annotation exists in the
+     * class.
      *
-     * @param class           the {@link Class} to query
      * @param annotationClass the annotation that must be present on a method to be matched
-     * @return a {@link Method} which is annotated with the specified annotation class
+     * @param sourceClass     the {@link Class} to query
+     * @return a {@link Method} which is annotated with the specified annotation
      * @throws AgentConfigurationException if either no method or more than one method found
      */
-    public static Method getSinglePublicMethodWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass)
+    public static Method getSinglePublicMethodWithAnnotation(Class<? extends Annotation> annotationClass,
+            Class<?> clazz)
     {
         List<Method> agentTaskMethods = MethodUtils.getMethodsListWithAnnotation(clazz, annotationClass);
 

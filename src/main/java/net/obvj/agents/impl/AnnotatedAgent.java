@@ -35,7 +35,7 @@ public class AnnotatedAgent
         {
             String agentClassName = configuration.getAgentClass();
             agentClass = Class.forName(agentClassName);
-            agentTaskMethod = AnnotationUtils.getSinglePublicAndZeroArgumentMethodWithAnnotation(agentClass, Run.class);
+            agentTaskMethod = AnnotationUtils.getSinglePublicAndZeroArgumentMethodWithAnnotation(Run.class, agentClass);
             agentInstance = ConstructorUtils.invokeConstructor(agentClass);
         }
         catch (ReflectiveOperationException cause)
