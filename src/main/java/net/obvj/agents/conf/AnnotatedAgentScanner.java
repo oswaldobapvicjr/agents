@@ -1,10 +1,9 @@
 package net.obvj.agents.conf;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +30,13 @@ public class AnnotatedAgentScanner
 
     /**
      * Scans the specified base package for agents.
+     * <p>
+     * <strong>NOTE: </strong> an empty {@code basePackage} string as a parameter may result
+     * in a full class-path scan.
      *
-     * @param basePackage the package to search for annotated classes
+     * @param basePackage the base package to search for annotated classes
      * @return a {@link Set} of {@link AgentConfiguration} objects from the objects found in
-     *         the specified package
+     *         the specified package, or an empty set; not null
      */
     public static Set<AgentConfiguration> scanPackage(String basePackage)
     {
@@ -47,14 +49,20 @@ public class AnnotatedAgentScanner
 
     /**
      * Scans the specified base package for candidate agents.
+     * <p>
+     * <strong>NOTE: </strong> an empty {@code basePackage} string as a parameter may result
+     * in a full class-path scan.
      *
-     * @param basePackage the package to search for annotated classes
+     * @param basePackage the base package to search for annotated classes
      * @returns a list of candidate class names found in class path with the {@code @Agent}
-     *          annotation
+     *          annotation, or an empty set; not null
      */
     protected static Set<String> findAnnotatedAgentClasses(String basePackage)
     {
-        LOG.info("Scanning package: {}", basePackage);
+        if (LOG.isInfoEnabled())
+        {
+            LOG.info("Scanning package: {}", StringUtils.defaultIfEmpty(basePackage, "<no package specified>"));
+        }
 
         Stopwatch stopwatch = Stopwatch.createStarted(Type.WALL_CLOCK_TIME);
         Set<String> classNames = AnnotationUtils.findClassesWithAnnotation(Agent.class, basePackage);

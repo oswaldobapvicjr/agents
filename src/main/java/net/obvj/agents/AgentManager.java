@@ -69,7 +69,7 @@ public class AgentManager
      */
     private Optional<AbstractAgent> createAgent(AgentConfiguration agentConfiguration)
     {
-        LOG.debug("Instantiating agent {}...", agentConfiguration.getAgentClass());
+        LOG.debug("Instantiating agent {}...", agentConfiguration.getClassName());
 
         try
         {
@@ -91,7 +91,7 @@ public class AgentManager
     {
         AgentConfiguration configuration = agent.getConfiguration();
         String name = agent.getName();
-        String agentClass = configuration.getAgentClass();
+        String agentClass = configuration.getClassName();
 
         agentsByName.put(name, agent);
         agentsByClass.put(agentClass, configuration);
@@ -147,7 +147,7 @@ public class AgentManager
 
         LOG.info("Resetting agent: {}", name);
 
-        String agentClass = agent.getConfiguration().getAgentClass();
+        String agentClass = agent.getConfiguration().getClassName();
         AgentConfiguration agentConfig = agentsByClass.get(agentClass);
         AbstractAgent newAgent = AgentFactory.create(agentConfig);
 

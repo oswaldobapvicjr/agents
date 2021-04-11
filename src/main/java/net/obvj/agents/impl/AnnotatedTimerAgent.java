@@ -1,6 +1,7 @@
 package net.obvj.agents.impl;
 
 import net.obvj.agents.conf.AgentConfiguration;
+import net.obvj.agents.exception.AgentConfigurationException;
 
 /**
  * A {@link TimerAgent} that runs an object annotated with {@code @Agent}.
@@ -11,6 +12,13 @@ public class AnnotatedTimerAgent extends TimerAgent
 {
     private final AnnotatedAgent annotatedAgent;
 
+    /**
+     * Creates a new AnnotatedTimerAgent for the given {@link AgentConfiguration}.
+     *
+     * @param configuration the {@link AgentConfiguration} to be parsed
+     * @throws AgentConfigurationException if any exception regarding a reflective operation
+     *                                     (e.g.: class or method not found) occurs
+     */
     public AnnotatedTimerAgent(AgentConfiguration configuration)
     {
         super(configuration);
@@ -27,7 +35,7 @@ public class AnnotatedTimerAgent extends TimerAgent
     }
 
     /**
-     * @return the metadata
+     * @return the metadata associated with this AnnotatedTimerAgent
      */
     protected AnnotatedAgent getMetadata()
     {

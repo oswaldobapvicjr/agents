@@ -33,7 +33,7 @@ public class AnnotatedAgent
     {
         try
         {
-            String agentClassName = configuration.getAgentClass();
+            String agentClassName = configuration.getClassName();
             agentClass = Class.forName(agentClassName);
             agentTaskMethod = AnnotationUtils.getSinglePublicAndZeroArgumentMethodWithAnnotation(Run.class, agentClass);
             agentInstance = ConstructorUtils.invokeConstructor(agentClass);
