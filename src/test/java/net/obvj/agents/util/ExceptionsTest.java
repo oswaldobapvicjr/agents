@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import net.obvj.agents.exception.AgentConfigurationException;
 import net.obvj.agents.exception.AgentRuntimeException;
+import net.obvj.agents.exception.InvalidClassException;
 
 /**
  * Unit tests for the {@link Exceptions} class.
@@ -53,6 +54,20 @@ class ExceptionsTest
     {
         assertException(IllegalStateException.class, EXPECTED_MSG, NullPointerException.class,
                 Exceptions.illegalState(new NullPointerException(), MSG_PATTERN, ARG1, ARG2));
+    }
+
+    @Test
+    void invalidClass_messageAndParams_validMessage()
+    {
+        assertException(InvalidClassException.class, EXPECTED_MSG, null,
+                Exceptions.invalidClass(MSG_PATTERN, ARG1, ARG2));
+    }
+
+    @Test
+    void invalidClass_messageAndParamsAndCause_validMessageAndCause()
+    {
+        assertException(InvalidClassException.class, EXPECTED_MSG, NullPointerException.class,
+                Exceptions.invalidClass(new NullPointerException(), MSG_PATTERN, ARG1, ARG2));
     }
 
     @Test

@@ -1,10 +1,12 @@
 package net.obvj.agents.util;
 
-import static net.obvj.junit.utils.matchers.AdvancedMatchers.*;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.instantiationNotAllowed;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -16,12 +18,16 @@ import org.junit.jupiter.api.Test;
 
 import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.annotation.Run;
-import net.obvj.agents.exception.AgentConfigurationException;
+import net.obvj.agents.exception.InvalidClassException;
 import net.obvj.agents.test.agents.invalid.*;
-import net.obvj.agents.test.agents.valid.*;
+import net.obvj.agents.test.agents.valid.DummyAgent;
+import net.obvj.agents.test.agents.valid.TestAgentWithNoNameAndTypeCronAndRunMethod;
+import net.obvj.agents.test.agents.valid.TestAgentWithNoNameAndTypeTimerAndRunMethod;
+import net.obvj.agents.test.agents.valid.TestTimerAgent1;
+import net.obvj.agents.util.AnnotationUtils.MethodFilter;
 
 /**
- * Unit tests for the {@link AnnotationUtils}
+ * Unit tests for the {@link AnnotationUtils}.
  *
  * @author oswaldo.bapvic.jr
  */
@@ -30,8 +36,7 @@ class AnnotationUtilsTest
     private static final String ALL_TEST_AGENTS_PACKAGE = "net.obvj.agents.test.agents";
     private static final String VALID_TEST_AGENTS_PACKAGE = "net.obvj.agents.test.agents.valid";
 
-    private static final List<String> VALID_AGENT_CLASS_NAMES = Arrays.asList(
-            DummyAgent.class.getName(),
+    private static final List<String> VALID_AGENT_CLASS_NAMES = Arrays.asList(DummyAgent.class.getName(),
             TestAgentWithNoNameAndTypeCronAndRunMethod.class.getName(),
             TestAgentWithNoNameAndTypeTimerAndRunMethod.class.getName(),
             TestTimerAgent1.class.getName());
@@ -56,7 +61,6 @@ class AnnotationUtilsTest
         ALL_AGENT_CLASS_NAMES.addAll(VALID_AGENT_CLASS_NAMES);
         ALL_AGENT_CLASS_NAMES.addAll(INVALID_AGENT_CLASS_NAMES);
     }
-
 
     @Test
     void constructor_instantiationNotAllowed()
@@ -91,39 +95,52 @@ class AnnotationUtilsTest
     }
 
     @Test
-    void getSinglePublicAndZeroArgumentMethodWithAnnotation_singleMatchingMethod_success()
+    void getSinglePublicMethodWithAnnotation_noParamFilterAndsingleMatchingMethod_success()
     {
-        Method method = AnnotationUtils.getSinglePublicAndZeroArgumentMethodWithAnnotation(Run.class, DummyAgent.class);
+        Method method = AnnotationUtils.getSinglePublicMethodWithAnnotation(Run.class, DummyAgent.class,
+                MethodFilter.NO_PARAMETER);
         assertThat(method.getName(), is(equalTo("runTask")));
         assertThat(method.getParameterCount(), is(equalTo(0)));
     }
 
     @Test
-    void getSinglePublicAndZeroArgumentMethodWithAnnotation_twoMatchingMethods_exception()
+    void getSinglePublicMethodWithAnnotation_noParamFilterAndTwoMatchingMethods_exception()
     {
-        assertThat(() -> AnnotationUtils.getSinglePublicAndZeroArgumentMethodWithAnnotation(Run.class,
-                TestAgentWithTwoRunMethods.class), throwsException(AgentConfigurationException.class));
+        assertThat(() -> AnnotationUtils.getSinglePublicMethodWithAnnotation(Run.class,
+                TestAgentWithTwoRunMethods.class, MethodFilter.NO_PARAMETER),
+                throwsException(InvalidClassException.class));
     }
 
     @Test
-    void getSinglePublicAndZeroArgumentMethodWithAnnotation_noRunMethod_exception()
+    void getSinglePublicMethodWithAnnotation_noRunMethod_exception()
     {
-        assertThat(() -> AnnotationUtils.getSinglePublicAndZeroArgumentMethodWithAnnotation(Run.class,
-                TestAgentWithAllCustomParams.class), throwsException(AgentConfigurationException.class));
+        assertThat(() -> AnnotationUtils.getSinglePublicMethodWithAnnotation(Run.class,
+                TestAgentWithAllCustomParams.class), throwsException(InvalidClassException.class));
     }
 
     @Test
-    void getSinglePublicAndZeroArgumentMethodWithAnnotation_privateRunMethod_exception()
+    void getSinglePublicMethodWithAnnotation_privateRunMethod_exception()
     {
-        assertThat(() -> AnnotationUtils.getSinglePublicAndZeroArgumentMethodWithAnnotation(Run.class,
-                TestAgentWithNoType.class), throwsException(AgentConfigurationException.class));
+        assertThat(() -> AnnotationUtils.getSinglePublicMethodWithAnnotation(Run.class, TestAgentWithNoType.class),
+                throwsException(InvalidClassException.class));
     }
 
     @Test
-    void getSinglePublicAndZeroArgumentMethodWithAnnotation_runMethodWithParameter_exception()
+    void getSinglePublicMethodWithAnnotation_runMethodWithParameter_success()
     {
-        assertThat(() -> AnnotationUtils.getSinglePublicAndZeroArgumentMethodWithAnnotation(Run.class,
-                TestAgentWithCustomNameAndType.class), throwsException(AgentConfigurationException.class));
+        Method method = AnnotationUtils.getSinglePublicMethodWithAnnotation(Run.class,
+                TestAgentWithCustomNameAndType.class);
+        assertThat(method.getName(), is(equalTo("run")));
+        assertThat(method.getParameterCount(), is(equalTo(1)));
+    }
+
+    @Test
+    void getSinglePublicMethodWithAnnotation_noParamFilterAndRunMethodWithParameter_exception()
+    {
+        assertThat(
+                () -> AnnotationUtils.getSinglePublicMethodWithAnnotation(Run.class,
+                        TestAgentWithCustomNameAndType.class, MethodFilter.NO_PARAMETER),
+                throwsException(InvalidClassException.class));
     }
 
 }

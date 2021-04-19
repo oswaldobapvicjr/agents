@@ -8,7 +8,9 @@ import org.springframework.util.ReflectionUtils;
 import net.obvj.agents.annotation.Run;
 import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.exception.AgentConfigurationException;
+import net.obvj.agents.exception.InvalidClassException;
 import net.obvj.agents.util.AnnotationUtils;
+import net.obvj.agents.util.AnnotationUtils.MethodFilter;
 
 /**
  * An object that prepares and holds the required metadata and infrastructure for the
@@ -35,12 +37,13 @@ public class AnnotatedAgent
         {
             String agentClassName = configuration.getClassName();
             agentClass = Class.forName(agentClassName);
-            agentTaskMethod = AnnotationUtils.getSinglePublicAndZeroArgumentMethodWithAnnotation(Run.class, agentClass);
+            agentTaskMethod = AnnotationUtils.getSinglePublicMethodWithAnnotation(Run.class, agentClass,
+                    MethodFilter.NO_PARAMETER);
             agentInstance = ConstructorUtils.invokeConstructor(agentClass);
         }
         catch (ReflectiveOperationException cause)
         {
-            throw new AgentConfigurationException(cause);
+            throw new InvalidClassException(cause);
         }
     }
 

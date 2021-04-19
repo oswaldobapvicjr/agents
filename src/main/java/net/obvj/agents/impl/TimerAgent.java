@@ -89,6 +89,16 @@ public abstract class TimerAgent extends AbstractAgent
     }
 
     /**
+     * Returns the interval configured for this {@code TimerAgent}.
+     *
+     * @return the interval configured for this {@code TimerAgent}.
+     */
+    public TimeInterval getInterval()
+    {
+        return interval;
+    }
+
+    /**
      * @return A string with current agent status in JSON format
      */
     @Override

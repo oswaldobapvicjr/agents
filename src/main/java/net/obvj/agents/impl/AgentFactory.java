@@ -1,27 +1,18 @@
 package net.obvj.agents.impl;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.Objects;
 
 import net.obvj.agents.AgentType;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.util.Exceptions;
 
 /**
- * A factory that creates {@link AbstractAgent} objects based on given {@link AgentConfiguration}.
+ * A factory that creates {@link AbstractAgent} objects based on given
+ * {@link AgentConfiguration}.
  *
  * @author oswaldo.bapvic.jr
  */
 public class AgentFactory
 {
-    private static final Map<AgentType, Function<AgentConfiguration, AbstractAgent>> IMPLEMENTATIONS = new EnumMap<>(AgentType.class);
-
-    static
-    {
-        IMPLEMENTATIONS.put(AgentType.TIMER, AnnotatedTimerAgent::new);
-        IMPLEMENTATIONS.put(AgentType.CRON, AnnotatedCronAgent::new);
-    }
 
     private AgentFactory()
     {
@@ -29,20 +20,15 @@ public class AgentFactory
     }
 
     /**
-     * Creates a new Agent from the given {@link AgentConfiguration}.
+     * Creates a new agent instance from the given {@link AgentConfiguration}.
      *
-     * @throws NullPointerException     if a null agent configuration is received
-     * @throws IllegalArgumentException if an unknown agent type is received
+     * @throws NullPointerException if a null agent configuration is received
      */
     public static AbstractAgent create(AgentConfiguration configuration)
     {
+        Objects.requireNonNull(configuration, "The AgentConfiguration must not be null");
         AgentType type = configuration.getType();
-
-        if (IMPLEMENTATIONS.containsKey(type))
-        {
-            return IMPLEMENTATIONS.get(type).apply(configuration);
-        }
-        throw Exceptions.illegalArgument("Unknown agent type: \"%s\"", type);
+        return type.getFactoryFunction().apply(configuration);
     }
 
 }

@@ -2,6 +2,7 @@ package net.obvj.agents.util;
 
 import net.obvj.agents.exception.AgentConfigurationException;
 import net.obvj.agents.exception.AgentRuntimeException;
+import net.obvj.agents.exception.InvalidClassException;
 
 /**
  * Shorthands creating exceptions with a formatted message.
@@ -64,6 +65,31 @@ public final class Exceptions
     public static IllegalStateException illegalState(final Throwable cause, final String format, final Object... args)
     {
         return new IllegalStateException(String.format(format, args), cause);
+    }
+
+    /**
+     * Creates a {@link InvalidClassException} with a formatted message.
+     *
+     * @param format See {@link String#format(String, Object...)}
+     * @param args   See {@link String#format(String, Object...)}
+     * @return a {@link InvalidClassException} with a formatted message
+     */
+    public static InvalidClassException invalidClass(final String format, final Object... args)
+    {
+        return new InvalidClassException(String.format(format, args));
+    }
+
+    /**
+     * Creates a {@link InvalidClassException} with a cause and a formatted message.
+     *
+     * @param cause  the cause to be set
+     * @param format See {@link String#format(String, Object...)}
+     * @param args   See {@link String#format(String, Object...)}
+     * @return a {@link InvalidClassException} with given cause and formatted message
+     */
+    public static InvalidClassException invalidClass(final Throwable cause, final String format, final Object... args)
+    {
+        return new InvalidClassException(String.format(format, args), cause);
     }
 
     /**
