@@ -166,7 +166,10 @@ class CronAgentTest
     @Test
     void stop_validAgent_nextExecutionDateEmptyAndExecutorServiceShutdown() throws TimeoutException
     {
-        CronAgent agent = spy((CronAgent) AgentFactory.create(AGENT_CFG_EVERY_MINUTE));
+        CronAgent agent = spy((CronAgent) AgentFactory.create(AGENT_CFG_EVERY_DAY_AT_2_AM));
+        agent.start();
+        assertThat(agent.getExecutorService().isShutdown(), is(false));
+        assertThat(agent.getNextExecutionDate().get(), is(notNullValue()));
         agent.stop();
         assertThat(agent.getExecutorService().isShutdown(), is(true));
         assertThat(agent.getNextExecutionDate(), is(Optional.empty()));

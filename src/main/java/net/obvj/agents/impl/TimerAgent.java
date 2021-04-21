@@ -1,6 +1,7 @@
 package net.obvj.agents.impl;
 
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -112,6 +113,17 @@ public abstract class TimerAgent extends AbstractAgent
                 .append("averageExecutionDuration", formatAverageRunDuration())
                 .append("interval", interval);
         return builder.build();
+    }
+
+    /**
+     * Returns the {@link ExecutorService} associated with this agent instance, for testing
+     * purposes.
+     *
+     * @return the {@link ExecutorService}
+     */
+    protected ScheduledExecutorService getExecutorService()
+    {
+        return schedule;
     }
 
 }

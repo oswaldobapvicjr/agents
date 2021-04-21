@@ -13,6 +13,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.concurrent.TimeoutException;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -37,6 +39,9 @@ class TimerAgentTest
 
     private static final AgentConfiguration DUMMY_AGENT_CONFIG = new AgentConfiguration.Builder(TIMER).name(DUMMY_AGENT)
             .className(AGENT_CLASS_NAME).interval("30 seconds").build();
+
+    private static final AgentConfiguration DUMMY_AGENT_CONFIG_EVERY_DAY = new AgentConfiguration.Builder(TIMER)
+            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("24 hours").build();
 
     private static final AgentConfiguration TEST_CRON_AGENT_CONFIG = new AgentConfiguration.Builder(CRON)
             .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).build();
@@ -84,6 +89,16 @@ class TimerAgentTest
         when(agentMock.isStopped()).thenReturn(true);
         assertThat(() -> agentMock.stop(), throwsException(IllegalStateException.class)
                 .withMessageContaining(TimerAgent.MSG_AGENT_ALREADY_STOPPED));
+    }
+
+    @Test
+    void stop_validAgent_executorServiceShutdown() throws TimeoutException
+    {
+        TimerAgent agent = spy((TimerAgent) AgentFactory.create(DUMMY_AGENT_CONFIG_EVERY_DAY));
+        agent.start();
+        assertThat(agent.getExecutorService().isShutdown(), is(false));
+        agent.stop();
+        assertThat(agent.getExecutorService().isShutdown(), is(true));
     }
 
     /**

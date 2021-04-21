@@ -3,6 +3,7 @@ package net.obvj.agents.impl;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -169,6 +170,12 @@ public abstract class CronAgent extends AbstractAgent
         return Optional.ofNullable(nextExecutionDate);
     }
 
+    /**
+     * Returns the {@link ExecutorService} associated with this agent instance, for testing
+     * purposes.
+     *
+     * @return the {@link ExecutorService}
+     */
     protected ScheduledExecutorService getExecutorService()
     {
         return schedule;
