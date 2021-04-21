@@ -97,8 +97,8 @@ public abstract class CronAgent extends AbstractAgent
             {
                 Duration timeToNextExecution = optional.get();
                 schedule.schedule(this, timeToNextExecution.toMillis(), TimeUnit.MILLISECONDS);
-
                 nextExecutionDate = DateUtils.now().plus(timeToNextExecution);
+
                 if (LOG.isDebugEnabled())
                 {
                     LOG.debug("{} execution of {} will be at: {}", firstExecution ? "First" : "Next", getName(),
@@ -164,9 +164,9 @@ public abstract class CronAgent extends AbstractAgent
     /**
      * @return the next execution date
      */
-    public ZonedDateTime getNextExecutionDate()
+    public Optional<ZonedDateTime> getNextExecutionDate()
     {
-        return nextExecutionDate;
+        return Optional.ofNullable(nextExecutionDate);
     }
 
     protected ScheduledExecutorService getExecutorService()
