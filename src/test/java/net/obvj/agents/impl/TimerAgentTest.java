@@ -24,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.impl.AbstractAgent.State;
 import net.obvj.agents.test.agents.valid.DummyAgent;
+import net.obvj.agents.test.agents.valid.TestTimerAgentThrowingException;
 import net.obvj.agents.util.TimeInterval;
 
 /**
@@ -132,6 +133,21 @@ class TimerAgentTest
         verify(agent).runTask();
         assertThat("State after start() should be SET", agent.getState(), is(State.SET));
         assertThat(agent.getLastRunDate(), is(notNullValue()));
+    }
+
+    @Test
+    void run_exception_executorServiceNotAffected()
+    {
+        AgentConfiguration exceptionThrowingAgent = AgentConfiguration
+                .fromAnnotatedClass(TestTimerAgentThrowingException.class);
+        TimerAgent agent = spy((TimerAgent) AgentFactory.create(exceptionThrowingAgent));
+        assertThat("State before run() should be SET", agent.getState(), is(State.SET));
+        agent.run();
+        verify(agent).runTask();
+        assertThat("State after start() should be SET", agent.getState(), is(State.SET));
+        assertThat(agent.getLastRunDate(), is(notNullValue()));
+        assertThat(agent.getExecutorService().isShutdown(), is(false));
+        assertThat(agent.getExecutorService().isTerminated(), is(false));
     }
 
     @Test

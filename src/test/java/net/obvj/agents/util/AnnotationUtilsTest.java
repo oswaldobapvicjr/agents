@@ -20,10 +20,7 @@ import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.annotation.Run;
 import net.obvj.agents.exception.InvalidClassException;
 import net.obvj.agents.test.agents.invalid.*;
-import net.obvj.agents.test.agents.valid.DummyAgent;
-import net.obvj.agents.test.agents.valid.TestAgentWithNoNameAndTypeCronAndRunMethod;
-import net.obvj.agents.test.agents.valid.TestAgentWithNoNameAndTypeTimerAndRunMethod;
-import net.obvj.agents.test.agents.valid.TestTimerAgent1;
+import net.obvj.agents.test.agents.valid.*;
 import net.obvj.agents.util.AnnotationUtils.MethodFilter;
 
 /**
@@ -39,7 +36,8 @@ class AnnotationUtilsTest
     private static final List<String> VALID_AGENT_CLASS_NAMES = Arrays.asList(DummyAgent.class.getName(),
             TestAgentWithNoNameAndTypeCronAndRunMethod.class.getName(),
             TestAgentWithNoNameAndTypeTimerAndRunMethod.class.getName(),
-            TestTimerAgent1.class.getName());
+            TestTimerAgent1.class.getName(),
+            TestTimerAgentThrowingException.class.getName());
 
     private static final List<String> INVALID_AGENT_CLASS_NAMES = Arrays.asList(
             TestAgentWithAllCustomParams.class.getName(),
