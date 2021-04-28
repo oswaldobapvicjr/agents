@@ -1,5 +1,6 @@
 package net.obvj.agents.impl;
 
+import net.obvj.agents.TimerAgent;
 import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.exception.AgentConfigurationException;
 

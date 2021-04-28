@@ -1,4 +1,4 @@
-package net.obvj.agents.impl;
+package net.obvj.agents;
 
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
@@ -10,8 +10,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.obvj.agents.AgentType;
 import net.obvj.agents.conf.AgentConfiguration;
+import net.obvj.agents.util.AgentThreadFactory;
 import net.obvj.agents.util.DateUtils;
 import net.obvj.agents.util.TimeInterval;
 
@@ -36,7 +36,7 @@ public abstract class TimerAgent extends AbstractAgent
      *
      * @param configuration the {@link AgentConfiguration} to be set
      */
-    TimerAgent(AgentConfiguration configuration)
+    protected TimerAgent(AgentConfiguration configuration)
     {
         super(configuration);
 

@@ -4,7 +4,6 @@ import java.util.function.Function;
 
 import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.impl.AbstractAgent;
 import net.obvj.agents.impl.AnnotatedCronAgent;
 import net.obvj.agents.impl.AnnotatedTimerAgent;
 

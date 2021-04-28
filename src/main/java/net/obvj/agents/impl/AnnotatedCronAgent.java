@@ -1,5 +1,6 @@
 package net.obvj.agents.impl;
 
+import net.obvj.agents.CronAgent;
 import net.obvj.agents.conf.AgentConfiguration;
 
 /**

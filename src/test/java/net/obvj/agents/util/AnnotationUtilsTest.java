@@ -41,6 +41,7 @@ class AnnotationUtilsTest
 
     private static final List<String> INVALID_AGENT_CLASS_NAMES = Arrays.asList(
             TestAgentWithAllCustomParams.class.getName(),
+            TestAgentWithAllCustomParamsAndConstructorThrowsException.class.getName(),
             TestAgentWithAllCustomParamsAndPrivateConstructor.class.getName(),
             TestAgentWithAllCustomParamsAndPrivateRunMethod.class.getName(),
             TestAgentWithCustomNameAndType.class.getName(),

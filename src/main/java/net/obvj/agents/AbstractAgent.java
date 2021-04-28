@@ -1,4 +1,4 @@
-package net.obvj.agents.impl;
+package net.obvj.agents;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.EvictingQueue;
 
-import net.obvj.agents.AgentType;
 import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.util.DateUtils;
 import net.obvj.performetrics.Counter;
@@ -184,7 +183,7 @@ public abstract class AbstractAgent implements Runnable
     public abstract void onStart();
 
     /**
-     * Terminates this agent timer.
+     * Suspends this agent.
      */
     public final void stop()
     {

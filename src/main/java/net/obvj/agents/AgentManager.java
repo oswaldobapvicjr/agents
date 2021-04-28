@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,8 +18,7 @@ import com.google.gson.JsonObject;
 import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.conf.AnnotatedAgentScanner;
-import net.obvj.agents.impl.AbstractAgent;
-import net.obvj.agents.impl.AgentFactory;
+import net.obvj.agents.util.AgentFactory;
 import net.obvj.agents.util.ApplicationContextFacade;
 import net.obvj.agents.util.Exceptions;
 
@@ -87,10 +87,10 @@ public class AgentManager
      *
      * @param agent the agent to be registered
      */
-    public void addAgent(AbstractAgent agent)
+    protected void addAgent(AbstractAgent agent)
     {
         AgentConfiguration configuration = agent.getConfiguration();
-        String name = agent.getName();
+        String name = configuration.getName();
         String agentClass = configuration.getClassName();
 
         agentsByName.put(name, agent);
@@ -99,13 +99,20 @@ public class AgentManager
     }
 
     /**
-     * @param name the agent to be found
-     * @return the Agent associated with the given name
-     * @throws IllegalArgumentException if no agent with the given name was found
-     * @since 2.0
+     * Searches and returns the agent with the specified name in this manager's scope.
+     *
+     * @param name the agent name to search for, not null
+     * @return the agent object associated with the specified name in this manager's scope
+     *
+     * @throws IllegalArgumentException if no agent with the given name found, or if the
+     *                                  specified string is either null or empty
      */
     public AbstractAgent findAgentByName(String name)
     {
+        if (StringUtils.isEmpty(name))
+        {
+            throw Exceptions.illegalArgument("The name cannot be null or empty");
+        }
         if (agentsByName.containsKey(name))
         {
             return agentsByName.get(name);
@@ -131,11 +138,11 @@ public class AgentManager
     }
 
     /**
-     * Creates a new instance of the agent identified by the given name
+     * Creates a new instance of the agent identified by the given name.
      *
      * @param name the identifier of the agent to be reset
-     * @throws IllegalArgumentException     if no agent with the given name was found
-     * @throws IllegalStateException        if the agent is either started or running
+     * @throws IllegalArgumentException if no agent with the given name was found
+     * @throws IllegalStateException    if the agent is either started or running
      */
     public void resetAgent(String name)
     {
@@ -155,7 +162,7 @@ public class AgentManager
     }
 
     /**
-     * Starts the agent identified by the given name
+     * Starts the agent identified by the given name.
      *
      * @param name the identifier of the agent to be started
      * @throws IllegalArgumentException if no agent with the given name was found
@@ -163,14 +170,14 @@ public class AgentManager
      */
     public void startAgent(String name)
     {
-        findAgentByName(name).start();
+        startAgent(findAgentByName(name));
     }
 
     /**
-     * Posts immediate execution of the agent identified by the given name
+     * Posts immediate execution of the agent identified by the given name.
      *
      * @param name the identifier of the agent to be run
-     * @throws IllegalArgumentException      if no agent with the given name was found
+     * @throws IllegalArgumentException if no agent with the given name was found
      */
     public void runNow(String name)
     {
@@ -178,7 +185,7 @@ public class AgentManager
     }
 
     /**
-     * Posts a graceful stop request for the agent identified by the given name
+     * Posts a graceful stop request for the agent identified by the given name.
      *
      * @param name the identifier of the agent to be stopped
      * @throws IllegalArgumentException if no agent with the given name was found
@@ -194,18 +201,7 @@ public class AgentManager
     }
 
     /**
-     * Returns all public (not-hidden) agent names.
-     *
-     * @return an array of public agent names
-     */
-    public String[] getPublicAgentNames()
-    {
-        return agentsByName.entrySet().stream().map(Map.Entry::getKey)
-                .toArray(String[]::new);
-    }
-
-    /**
-     * Returns a flag indicating whether an agent is running or not
+     * Returns a flag indicating whether an agent is running or not.
      *
      * @param name the identifier of the agent to be reset
      * @return {@code true} if the agent is running, otherwise {@code false}
@@ -217,7 +213,7 @@ public class AgentManager
     }
 
     /**
-     * Returns a flag indicating whether an agent is started or not
+     * Returns a flag indicating whether an agent is started or not.
      *
      * @param name the identifier of the agent to be reset
      * @return {@code true} if the agent is started, otherwise {@code false}
@@ -229,7 +225,7 @@ public class AgentManager
     }
 
     /**
-     * Returns a string containing agent status information for reporting
+     * Returns a string containing agent status information for reporting.
      *
      * @param name the identifier of the agent to be reported
      * @return a String containing agent status information and other metadata
@@ -265,7 +261,7 @@ public class AgentManager
 
     protected void startAgent(AbstractAgent agent)
     {
-        startAgent(agent.getName());
+        agent.start();
     }
 
 }

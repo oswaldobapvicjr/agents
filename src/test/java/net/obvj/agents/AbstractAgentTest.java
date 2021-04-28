@@ -1,4 +1,4 @@
-package net.obvj.agents.impl;
+package net.obvj.agents;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -15,7 +15,8 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import net.obvj.agents.impl.AbstractAgent.State;
+import net.obvj.agents.AbstractAgent;
+import net.obvj.agents.AbstractAgent.State;
 
 /**
  * Unit tests for the {@link AbstractAgent} class.

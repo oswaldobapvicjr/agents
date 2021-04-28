@@ -1,4 +1,4 @@
-package net.obvj.agents.impl;
+package net.obvj.agents;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -21,8 +21,8 @@ import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
 
-import net.obvj.agents.AgentType;
 import net.obvj.agents.conf.AgentConfiguration;
+import net.obvj.agents.util.AgentThreadFactory;
 import net.obvj.agents.util.DateUtils;
 
 /**
@@ -49,7 +49,7 @@ public abstract class CronAgent extends AbstractAgent
      *
      * @param configuration the {@link AgentConfiguration} to be set
      */
-    CronAgent(AgentConfiguration configuration)
+    protected CronAgent(AgentConfiguration configuration)
     {
         super(configuration);
 

@@ -1,10 +1,12 @@
-package net.obvj.agents.impl;
+package net.obvj.agents.util;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
+
+import net.obvj.agents.util.AgentThreadFactory;
 
 /**
  * Unit test methods for the {@link AgentThreadFactory} class.

@@ -1,7 +1,8 @@
-package net.obvj.agents.impl;
+package net.obvj.agents.util;
 
 import java.util.Objects;
 
+import net.obvj.agents.AbstractAgent;
 import net.obvj.agents.AgentType;
 import net.obvj.agents.conf.AgentConfiguration;
 

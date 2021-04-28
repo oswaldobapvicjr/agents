@@ -1,4 +1,4 @@
-package net.obvj.agents.impl;
+package net.obvj.agents;
 
 import static net.obvj.agents.AgentType.CRON;
 import static net.obvj.agents.AgentType.TIMER;
@@ -21,10 +21,13 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import net.obvj.agents.TimerAgent;
+import net.obvj.agents.AbstractAgent.State;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.impl.AbstractAgent.State;
+import net.obvj.agents.impl.AnnotatedTimerAgent;
 import net.obvj.agents.test.agents.valid.DummyAgent;
 import net.obvj.agents.test.agents.valid.TestTimerAgentThrowingException;
+import net.obvj.agents.util.AgentFactory;
 import net.obvj.agents.util.TimeInterval;
 
 /**

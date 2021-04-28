@@ -1,11 +1,9 @@
-package net.obvj.agents.impl;
+package net.obvj.agents.util;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.StringUtils;
-
-import net.obvj.agents.util.Exceptions;
 
 /**
  * An object that creates new threads for SMART agents.

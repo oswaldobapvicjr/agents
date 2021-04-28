@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import net.obvj.agents.AgentType;
 import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.exception.InvalidClassException;
+import net.obvj.agents.impl.AnnotatedTimerAgent;
 import net.obvj.agents.test.agents.invalid.TestAgentWithAllCustomParamsAndPrivateConstructor;
 import net.obvj.agents.test.agents.invalid.TestAgentWithAllCustomParamsAndPrivateRunMethod;
 import net.obvj.agents.test.agents.invalid.TestAgentWithNoNameAndTypeTimerAndNoRunMethod;
