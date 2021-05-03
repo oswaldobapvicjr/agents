@@ -7,7 +7,9 @@
     <artifactId>agents</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
-    <description>A lightweight timer/cron agents framework for Java applications</description>
+    <name>agents</name>
+    <description>A lightweight timer/cron task framework for Java applications</description>
+    <url>https://obvj.net/agents</url>
 
     <licenses>
         <license>
