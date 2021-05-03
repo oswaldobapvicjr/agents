@@ -3,23 +3,21 @@ package net.obvj.agents.util;
 import static net.obvj.agents.AgentType.CRON;
 import static net.obvj.agents.AgentType.TIMER;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.instantiationNotAllowed;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.Test;
 
+import net.obvj.agents.AbstractAgent.State;
 import net.obvj.agents.CronAgent;
 import net.obvj.agents.TimerAgent;
-import net.obvj.agents.AbstractAgent.State;
 import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.impl.AnnotatedCronAgent;
 import net.obvj.agents.impl.AnnotatedTimerAgent;
 import net.obvj.agents.test.agents.valid.DummyAgent;
 import net.obvj.agents.test.agents.valid.TestAgentWithNoNameAndTypeTimerAndRunMethod;
-import net.obvj.agents.util.AgentFactory;
-import net.obvj.agents.util.TimeUnit;
 
 /**
  * Unit tests for the {@link AgentFactory}.

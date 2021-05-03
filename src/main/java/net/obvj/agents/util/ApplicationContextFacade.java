@@ -20,8 +20,9 @@ public class ApplicationContextFacade
     /**
      * Return the bean instance that uniquely matches the given object type.
      *
-     * @param <T>
-     * @param beanClass type the bean must match; can be an interface or superclass
+     * @param <T>       the bean type to return
+     * @param beanClass the class which bean is to be returned; it can be an interface or
+     *                  superclass
      * @return an instance of the single bean matching the required type
      */
     public static <T> T getBean(Class<T> beanClass)

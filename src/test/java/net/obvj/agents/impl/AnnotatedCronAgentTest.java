@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.agents.AgentType;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.impl.AnnotatedCronAgent;
 import net.obvj.agents.test.agents.valid.TestAgentWithNoNameAndTypeCronAndRunMethod;
 
 /**

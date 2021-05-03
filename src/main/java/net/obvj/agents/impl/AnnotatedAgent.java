@@ -7,7 +7,6 @@ import org.springframework.util.ReflectionUtils;
 
 import net.obvj.agents.annotation.Run;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.exception.AgentConfigurationException;
 import net.obvj.agents.exception.InvalidClassException;
 import net.obvj.agents.util.AnnotationUtils;
 import net.obvj.agents.util.AnnotationUtils.MethodFilter;
@@ -28,8 +27,8 @@ public class AnnotatedAgent
      * Validates annotations and prepares all objects for execution.
      *
      * @param configuration the {@link AgentConfiguration} to be parsed
-     * @throws AgentConfigurationException if any exception regarding a reflective operation
-     *                                     (e.g.: class or method not found) occurs
+     * @throws InvalidClassException if any exception regarding a reflective operation (e.g.:
+     *                               class or method not found) occurs
      */
     public AnnotatedAgent(AgentConfiguration configuration)
     {

@@ -39,13 +39,21 @@ public class AgentManager
     private Map<String, AbstractAgent> agentsByName = new TreeMap<>();
     private Map<String, AgentConfiguration> agentsByClass = new TreeMap<>();
 
+    /**
+     * Returns the managed instance of this component.
+     *
+     * @return an instance of this {@link AgentManager}
+     */
     public static AgentManager getInstance()
     {
         return ApplicationContextFacade.getBean(AgentManager.class);
     }
 
     /**
-     * Loads agent candidates retrieved by the {@link AgentLoader}.
+     * Scans the specified base package for agent candidates. Then, builds each agent and
+     * registers them inside this manager instance.
+     *
+     * @param basePackage the base package to search for agent candidates
      */
     public void scanPackage(String basePackage)
     {

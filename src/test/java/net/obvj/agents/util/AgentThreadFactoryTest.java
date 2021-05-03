@@ -6,8 +6,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import net.obvj.agents.util.AgentThreadFactory;
-
 /**
  * Unit test methods for the {@link AgentThreadFactory} class.
  *

@@ -139,7 +139,7 @@ public abstract class AbstractAgent implements Runnable
     }
 
     /**
-     * @return The date & time this agent was started (scheduled).
+     * @return The date and time when this agent was started (scheduled).
      */
     public Calendar getStartDate()
     {
@@ -147,7 +147,7 @@ public abstract class AbstractAgent implements Runnable
     }
 
     /**
-     * @return The date & time when this agent task was last executed.
+     * @return The date and time when this agent task was last executed.
      */
     public Calendar getLastRunDate()
     {
