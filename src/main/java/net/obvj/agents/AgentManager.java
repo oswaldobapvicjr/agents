@@ -17,8 +17,8 @@ import com.google.gson.JsonObject;
 
 import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.conf.AnnotatedAgentScanner;
 import net.obvj.agents.util.AgentFactory;
+import net.obvj.agents.util.AnnotatedAgentScanner;
 import net.obvj.agents.util.ApplicationContextFacade;
 import net.obvj.agents.util.Exceptions;
 

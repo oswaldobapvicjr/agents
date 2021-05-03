@@ -25,9 +25,9 @@ import com.google.common.collect.Sets;
 
 import net.obvj.agents.AbstractAgent.State;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.conf.AnnotatedAgentScanner;
 import net.obvj.agents.test.agents.invalid.TestAgentWithAllCustomParamsAndConstructorThrowsException;
 import net.obvj.agents.test.agents.valid.DummyAgent;
+import net.obvj.agents.util.AnnotatedAgentScanner;
 import net.obvj.agents.util.ApplicationContextFacade;
 
 /**

@@ -1,4 +1,4 @@
-package net.obvj.agents.conf;
+package net.obvj.agents.util;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.obvj.agents.annotation.Agent;
+import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.exception.AgentConfigurationException;
-import net.obvj.agents.util.AnnotationUtils;
 import net.obvj.performetrics.Counter.Type;
 import net.obvj.performetrics.Stopwatch;
 import net.obvj.performetrics.util.Duration;

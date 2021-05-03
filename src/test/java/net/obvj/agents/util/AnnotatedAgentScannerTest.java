@@ -1,4 +1,4 @@
-package net.obvj.agents.conf;
+package net.obvj.agents.util;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.instantiationNotAllowed;
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
+import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.exception.AgentConfigurationException;
 import net.obvj.agents.test.agents.invalid.TestClassNotAgent;
 import net.obvj.agents.test.agents.valid.DummyAgent;
