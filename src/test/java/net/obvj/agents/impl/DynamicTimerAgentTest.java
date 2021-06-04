@@ -22,12 +22,12 @@ import net.obvj.agents.test.agents.invalid.TestAgentWithNoNameAndTypeTimerAndTwo
 import net.obvj.agents.test.agents.valid.TestAgentWithNoNameAndTypeTimerAndRunMethod;
 
 /**
- * Unit tests for the {@link AnnotatedTimerAgent}.
+ * Unit tests for the {@link DynamicTimerAgent}.
  *
  * @author oswaldo.bapvic.jr
  */
 @ExtendWith(MockitoExtension.class)
-class AnnotatedTimerAgentTest
+class DynamicTimerAgentTest
 {
     private static final Class<?> VALID_AGENT_CLASS = TestAgentWithNoNameAndTypeTimerAndRunMethod.class;
 
@@ -47,7 +47,7 @@ class AnnotatedTimerAgentTest
     {
         Mockito.when(configuration.getClassName())
                 .thenReturn(TestAgentWithNoNameAndTypeTimerAndNoRunMethod.class.getName());
-        assertThat(() -> new AnnotatedTimerAgent(configuration), throwsException(InvalidClassException.class));
+        assertThat(() -> new DynamicTimerAgent(configuration), throwsException(InvalidClassException.class));
     }
 
     @Test
@@ -55,14 +55,14 @@ class AnnotatedTimerAgentTest
     {
         Mockito.when(configuration.getClassName())
                 .thenReturn(TestAgentWithNoNameAndTypeTimerAndTwoRunMethods.class.getName());
-        assertThat(() -> new AnnotatedTimerAgent(configuration), throwsException(InvalidClassException.class));
+        assertThat(() -> new DynamicTimerAgent(configuration), throwsException(InvalidClassException.class));
     }
 
     @Test
     void runTask_validClass_noException()
     {
         Mockito.when(configuration.getClassName()).thenReturn(VALID_AGENT_CLASS.getName());
-        AnnotatedTimerAgent annotatedTimerAgent = new AnnotatedTimerAgent(configuration);
+        DynamicTimerAgent annotatedTimerAgent = new DynamicTimerAgent(configuration);
 
         assertNotNull(annotatedTimerAgent.getMetadata().getAgentInstance());
         assertNotNull(annotatedTimerAgent.getMetadata().getRunMethod());
@@ -75,7 +75,7 @@ class AnnotatedTimerAgentTest
     {
         Mockito.when(configuration.getClassName())
                 .thenReturn(TestAgentWithAllCustomParamsAndPrivateConstructor.class.getName());
-        assertThat(() -> new AnnotatedTimerAgent(configuration),
+        assertThat(() -> new DynamicTimerAgent(configuration),
                 throwsException(InvalidClassException.class).withCause(NoSuchMethodException.class));
     }
 
@@ -84,14 +84,14 @@ class AnnotatedTimerAgentTest
     {
         Mockito.when(configuration.getClassName())
                 .thenReturn(TestAgentWithAllCustomParamsAndPrivateRunMethod.class.getName());
-        assertThat(() -> new AnnotatedTimerAgent(configuration), throwsException(InvalidClassException.class));
+        assertThat(() -> new DynamicTimerAgent(configuration), throwsException(InvalidClassException.class));
     }
 
     @Test
     void toString_validAgent_customString()
     {
         Mockito.when(configuration.getClassName()).thenReturn(VALID_AGENT_CLASS.getName());
-        AnnotatedTimerAgent annotatedTimerAgent = new AnnotatedTimerAgent(configuration);
+        DynamicTimerAgent annotatedTimerAgent = new DynamicTimerAgent(configuration);
 
         String string = annotatedTimerAgent.toString();
         assertThat(string, equalTo("AnnotatedTimerAgent$" + VALID_AGENT_CLASS.getName()));

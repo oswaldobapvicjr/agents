@@ -6,9 +6,9 @@ public class AgentsTestDrive
 {
     public static void main(String[] args) throws InterruptedException
     {
-        AgentManager agentManager = AgentManager.getInstance();
+        AgentManager agentManager = AgentManager.defaultInstance();
         agentManager.scanPackage("net.obvj.agents.test.agents.valid");
         agentManager.startAllAgents();
-
     }
+
 }

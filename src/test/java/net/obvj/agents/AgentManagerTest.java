@@ -10,13 +10,12 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -25,6 +24,7 @@ import com.google.common.collect.Sets;
 
 import net.obvj.agents.AbstractAgent.State;
 import net.obvj.agents.conf.AgentConfiguration;
+import net.obvj.agents.conf.GlobalConfigurationHolder;
 import net.obvj.agents.test.agents.invalid.TestAgentWithAllCustomParamsAndConstructorThrowsException;
 import net.obvj.agents.test.agents.valid.DummyAgent;
 import net.obvj.agents.util.AnnotatedAgentScanner;
@@ -47,15 +47,19 @@ class AgentManagerTest
 
     private static final List<String> names = Arrays.asList(DUMMY_AGENT);
 
-    private static final AgentConfiguration DUMMY_AGENT_CONFIG = new AgentConfiguration.Builder(TIMER).name(DUMMY_AGENT)
-            .className(DUMMY_AGENT_CLASS_NAME).interval("8760 hour").build(); // once a year
+    private static final AgentConfiguration DUMMY_AGENT_CONFIG = new AgentConfiguration.Builder().type(TIMER)
+            .name(DUMMY_AGENT).className(DUMMY_AGENT_CLASS_NAME).interval("8760 hour").build(); // once a year
 
-    private static final AgentConfiguration INVALID_AGENT_CONFIG = new AgentConfiguration.Builder(TIMER)
+    private static final AgentConfiguration INVALID_AGENT_CONFIG = new AgentConfiguration.Builder().type(TIMER)
             .className(INVALID_AGENT_CLASS_NAME).build();
 
     @Mock(lenient = true)
     private AbstractAgent dummyAgent;
 
+    @Mock
+    private GlobalConfigurationHolder globalConfigurationHolder;
+
+    @InjectMocks
     private AgentManager manager = new AgentManager();
 
     private void mockDummyAgent()
@@ -71,14 +75,14 @@ class AgentManagerTest
     }
 
     @Test
-    void getInstance_validInstance()
+    void defaultInstance_validInstance()
     {
         try (MockedStatic<ApplicationContextFacade> applicationContextFacade = mockStatic(
                 ApplicationContextFacade.class))
         {
             applicationContextFacade.when(() -> ApplicationContextFacade.getBean(AgentManager.class))
                     .thenReturn(manager);
-            assertThat(AgentManager.getInstance(), equalTo(manager));
+            assertThat(AgentManager.defaultInstance(), equalTo(manager));
         }
     }
 
@@ -87,8 +91,9 @@ class AgentManagerTest
     {
         try (MockedStatic<AnnotatedAgentScanner> scanner = mockStatic(AnnotatedAgentScanner.class))
         {
-            scanner.when(() -> AnnotatedAgentScanner.scanPackage(PACKAGE1))
-                    .thenReturn(Sets.newHashSet(DUMMY_AGENT_CONFIG));
+            Set<AgentConfiguration> set = Sets.newHashSet(DUMMY_AGENT_CONFIG);
+            scanner.when(() -> AnnotatedAgentScanner.scanPackage(PACKAGE1)).thenReturn(set);
+            when(globalConfigurationHolder.getHighestPrecedenceAgentConfigurations()).thenReturn(set);
             manager.scanPackage(PACKAGE1);
         }
         assertEquals(1, manager.getAgents().size());
@@ -98,10 +103,12 @@ class AgentManagerTest
     @Test
     void scanPackage_mockedPackageAndValidAndInvalidAgent_instantiatesValidAgentOnly()
     {
+
         try (MockedStatic<AnnotatedAgentScanner> scanner = mockStatic(AnnotatedAgentScanner.class))
         {
-            scanner.when(() -> AnnotatedAgentScanner.scanPackage(PACKAGE1))
-                    .thenReturn(Sets.newHashSet(DUMMY_AGENT_CONFIG, INVALID_AGENT_CONFIG));
+            Set<AgentConfiguration> set = Sets.newHashSet(DUMMY_AGENT_CONFIG, INVALID_AGENT_CONFIG);
+            scanner.when(() -> AnnotatedAgentScanner.scanPackage(PACKAGE1)).thenReturn(set);
+            when(globalConfigurationHolder.getHighestPrecedenceAgentConfigurations()).thenReturn(set);
             manager.scanPackage(PACKAGE1);
         }
         assertEquals(1, manager.getAgents().size());

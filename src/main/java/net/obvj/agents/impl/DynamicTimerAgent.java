@@ -2,28 +2,28 @@ package net.obvj.agents.impl;
 
 import net.obvj.agents.TimerAgent;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.exception.AgentConfigurationException;
+import net.obvj.agents.exception.InvalidClassException;
 
 /**
- * A {@link TimerAgent} that runs an object annotated with {@code @Agent}.
+ * A {@link TimerAgent} that runs a dynamic agent object.
  *
  * @author oswaldo.bapvic.jr
  */
-public class AnnotatedTimerAgent extends TimerAgent
+public class DynamicTimerAgent extends TimerAgent
 {
-    private final AnnotatedAgent annotatedAgent;
+    private final DynamicAgent annotatedAgent;
 
     /**
-     * Creates a new AnnotatedTimerAgent for the given {@link AgentConfiguration}.
+     * Creates a new DynamicTimerAgent for the given {@link AgentConfiguration}.
      *
      * @param configuration the {@link AgentConfiguration} to be parsed
-     * @throws AgentConfigurationException if any exception regarding a reflective operation
-     *                                     (e.g.: class or method not found) occurs
+     * @throws InvalidClassException if any exception regarding a reflective operation (e.g.:
+     *                               class or method not found) occurs
      */
-    public AnnotatedTimerAgent(AgentConfiguration configuration)
+    public DynamicTimerAgent(AgentConfiguration configuration)
     {
         super(configuration);
-        annotatedAgent = new AnnotatedAgent(configuration);
+        annotatedAgent = new DynamicAgent(configuration);
     }
 
     /**
@@ -38,7 +38,7 @@ public class AnnotatedTimerAgent extends TimerAgent
     /**
      * @return the metadata associated with this AnnotatedTimerAgent
      */
-    protected AnnotatedAgent getMetadata()
+    protected DynamicAgent getMetadata()
     {
         return annotatedAgent;
     }

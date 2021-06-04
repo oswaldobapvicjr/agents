@@ -23,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.agents.AbstractAgent.State;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.impl.AnnotatedTimerAgent;
+import net.obvj.agents.impl.DynamicTimerAgent;
 import net.obvj.agents.test.agents.valid.DummyAgent;
 import net.obvj.agents.test.agents.valid.TestTimerAgentThrowingException;
 import net.obvj.agents.util.AgentFactory;
@@ -40,13 +40,13 @@ class TimerAgentTest
     private static final String AGENT_CLASS_NAME = DummyAgent.class.getCanonicalName();
     private static final String DUMMY_AGENT = "DummyAgent";
 
-    private static final AgentConfiguration DUMMY_AGENT_CONFIG = new AgentConfiguration.Builder(TIMER).name(DUMMY_AGENT)
-            .className(AGENT_CLASS_NAME).interval("30 seconds").build();
+    private static final AgentConfiguration DUMMY_AGENT_CONFIG = new AgentConfiguration.Builder().type(TIMER)
+            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("30 seconds").build();
 
-    private static final AgentConfiguration DUMMY_AGENT_CONFIG_EVERY_DAY = new AgentConfiguration.Builder(TIMER)
+    private static final AgentConfiguration DUMMY_AGENT_CONFIG_EVERY_DAY = new AgentConfiguration.Builder().type(TIMER)
             .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("24 hours").build();
 
-    private static final AgentConfiguration TEST_CRON_AGENT_CONFIG = new AgentConfiguration.Builder(CRON)
+    private static final AgentConfiguration TEST_CRON_AGENT_CONFIG = new AgentConfiguration.Builder().type(CRON)
             .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).build();
 
     @Mock(answer = Answers.CALLS_REAL_METHODS)
@@ -58,7 +58,7 @@ class TimerAgentTest
     @Test
     void constructor_otherAgentType_illegalArgument() throws ReflectiveOperationException
     {
-        assertThat(() -> new AnnotatedTimerAgent(TEST_CRON_AGENT_CONFIG),
+        assertThat(() -> new DynamicTimerAgent(TEST_CRON_AGENT_CONFIG),
                 throwsException(IllegalArgumentException.class).withMessageContaining("Not a timer agent"));
     }
 

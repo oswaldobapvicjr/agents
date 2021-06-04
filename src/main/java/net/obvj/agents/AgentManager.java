@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
@@ -17,6 +18,7 @@ import com.google.gson.JsonObject;
 
 import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.conf.AgentConfiguration;
+import net.obvj.agents.conf.GlobalConfigurationHolder;
 import net.obvj.agents.util.AgentFactory;
 import net.obvj.agents.util.AnnotatedAgentScanner;
 import net.obvj.agents.util.ApplicationContextFacade;
@@ -39,14 +41,26 @@ public class AgentManager
     private Map<String, AbstractAgent> agentsByName = new TreeMap<>();
     private Map<String, AgentConfiguration> agentsByClass = new TreeMap<>();
 
+    @Autowired
+    private GlobalConfigurationHolder configurationHolder;
+
     /**
-     * Returns the managed instance of this component.
+     * Returns the default instance of this component.
      *
-     * @return an instance of this {@link AgentManager}
+     * @return the default instance of this {@link AgentManager}
      */
-    public static AgentManager getInstance()
+    public static AgentManager defaultInstance()
     {
         return ApplicationContextFacade.getBean(AgentManager.class);
+    }
+
+    private GlobalConfigurationHolder getConfigurationHolder()
+    {
+        if (configurationHolder == null)
+        {
+            configurationHolder = ApplicationContextFacade.getBean(GlobalConfigurationHolder.class);
+        }
+        return configurationHolder;
     }
 
     /**
@@ -57,15 +71,40 @@ public class AgentManager
      */
     public void scanPackage(String basePackage)
     {
+        // TODO: Split this in two methods. One for scanning and another one for loading
+        // (for there could be multiple scans, and only one fetch from global configuration)
+
         Collection<AgentConfiguration> agentCandidates = AnnotatedAgentScanner.scanPackage(basePackage);
+        getConfigurationHolder().addAll(agentCandidates);
+
+        LOG.info("Checking external configuration...");
+        Collection<AgentConfiguration> globalAgentCandidates = getConfigurationHolder()
+                .getHighestPrecedenceAgentConfigurations();
+
+        LOG.info("{} agent candidate(s) found including external configuration files", globalAgentCandidates.size());
 
         LOG.info("Instantiating agent(s)...");
 
-        agentCandidates.stream().map(this::createAgent).filter(Optional::isPresent).map(Optional::get)
+        globalAgentCandidates.stream().map(this::instantiateAgent).filter(Optional::isPresent).map(Optional::get)
                 .forEach(this::addAgent);
 
-        LOG.info("{}/{} agent(s) loaded successfully: {}",
-                agentsByName.size(), agentCandidates.size(), agentsByName.values());
+        logAgentsLoadedSuccessfully(globalAgentCandidates);
+    }
+
+    private void logAgentsLoadedSuccessfully(Collection<AgentConfiguration> globalAgentCandidates)
+    {
+        LOG.info("{}/{} agent(s) loaded successfully: {}", agentsByClass.size(), globalAgentCandidates.size(),
+                agentsByClass.values());
+
+        int numberOfFailedAgents = globalAgentCandidates.size() - agentsByClass.size();
+        if (numberOfFailedAgents > 0 && numberOfFailedAgents < globalAgentCandidates.size())
+        {
+            LOG.warn("{} agent(s) could not be loaded. Please check your configuration.", numberOfFailedAgents);
+        }
+        else if (numberOfFailedAgents >= globalAgentCandidates.size())
+        {
+            LOG.error("No agent could be loaded. Please check your configuration.");
+        }
     }
 
     /**
@@ -75,17 +114,17 @@ public class AgentManager
      * @return an Optional which may contain a valid {@link Agent}, or
      *         {@link Optional#empty()} if unable to parse the given configuration
      */
-    private Optional<AbstractAgent> createAgent(AgentConfiguration agentConfiguration)
+    private Optional<AbstractAgent> instantiateAgent(AgentConfiguration agentConfiguration)
     {
-        LOG.debug("Instantiating agent {}...", agentConfiguration.getClassName());
-
+        LOG.debug("Instantiating agent {} from {} configuration...", agentConfiguration.getClassName(),
+                agentConfiguration.getSource());
         try
         {
             return Optional.of(AgentFactory.create(agentConfiguration));
         }
         catch (Exception exception)
         {
-            LOG.error("Error loading agent: {}", agentConfiguration.getName(), exception);
+            LOG.error("Error loading agent: {}", agentConfiguration.getClassName(), exception);
             return Optional.empty();
         }
     }

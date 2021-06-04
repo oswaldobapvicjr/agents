@@ -27,7 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.agents.AbstractAgent.State;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.impl.AnnotatedCronAgent;
+import net.obvj.agents.impl.DynamicCronAgent;
 import net.obvj.agents.test.agents.valid.TestAgentWithNoNameAndTypeCronAndRunMethod;
 import net.obvj.agents.util.AgentFactory;
 import net.obvj.agents.util.DateUtils;
@@ -64,16 +64,16 @@ class CronAgentTest
     private static final String AGENT_CRON_CLASS_NAME = TestAgentWithNoNameAndTypeCronAndRunMethod.class
             .getCanonicalName();
 
-    private static final AgentConfiguration AGENT_CFG_EVERY_MINUTE = new AgentConfiguration.Builder(CRON)
+    private static final AgentConfiguration AGENT_CFG_EVERY_MINUTE = new AgentConfiguration.Builder().type(CRON)
             .name(AGENT_NAME).className(AGENT_CRON_CLASS_NAME).interval(STR_CRON_EVERY_MINUTE).build();
 
-    private static final AgentConfiguration AGENT_CFG_EVERY_30_MIN = new AgentConfiguration.Builder(CRON)
+    private static final AgentConfiguration AGENT_CFG_EVERY_30_MIN = new AgentConfiguration.Builder().type(CRON)
             .name(AGENT_NAME).className(AGENT_CRON_CLASS_NAME).interval(STR_CRON_EVERY_30_MIN).build();
 
-    private static final AgentConfiguration AGENT_CFG_EVERY_DAY_AT_2_AM = new AgentConfiguration.Builder(CRON)
+    private static final AgentConfiguration AGENT_CFG_EVERY_DAY_AT_2_AM = new AgentConfiguration.Builder().type(CRON)
             .name(AGENT_NAME).className(AGENT_CRON_CLASS_NAME).interval(STR_CRON_EVERY_DAY_AT_2_AM).build();
 
-    private static final AgentConfiguration AGENT_CFG_HOURLY_ON_WEEKEND = new AgentConfiguration.Builder(CRON)
+    private static final AgentConfiguration AGENT_CFG_HOURLY_ON_WEEKEND = new AgentConfiguration.Builder().type(CRON)
             .name(AGENT_NAME).className(AGENT_CRON_CLASS_NAME).interval(STR_CRON_HOURLY_ON_WEEKEND).build();
 
     private static final CronAgent AGENT_EVERY_MINUTE = spy((CronAgent) AgentFactory.create(AGENT_CFG_EVERY_MINUTE));
@@ -81,10 +81,11 @@ class CronAgentTest
     private static final CronAgent AGENT_EVERY_DAY_AT_2_AM = spy((CronAgent) AgentFactory.create(AGENT_CFG_EVERY_DAY_AT_2_AM));
     private static final CronAgent AGENT_HOURLY_ON_WEEKEND = spy((CronAgent) AgentFactory.create(AGENT_CFG_HOURLY_ON_WEEKEND));
 
-    private static final AgentConfiguration DUMMY_AGENT_CONFIG = new AgentConfiguration.Builder(CRON).name(AGENT_NAME)
+    private static final AgentConfiguration DUMMY_AGENT_CONFIG = new AgentConfiguration.Builder().type(CRON)
+            .name(AGENT_NAME)
             .className(AGENT_CRON_CLASS_NAME).interval("0 0 * * 0").build();
 
-    private static final AgentConfiguration TEST_TIMER_AGENT_CONFIG = new AgentConfiguration.Builder(TIMER)
+    private static final AgentConfiguration TEST_TIMER_AGENT_CONFIG = new AgentConfiguration.Builder().type(TIMER)
             .name(AGENT_NAME).className(AGENT_CRON_CLASS_NAME).build();
 
     @Mock(answer = Answers.CALLS_REAL_METHODS)
@@ -118,7 +119,7 @@ class CronAgentTest
     @Test
     void constructor_otherAgentType_illegalArgument() throws ReflectiveOperationException
     {
-        assertThat(() -> new AnnotatedCronAgent(TEST_TIMER_AGENT_CONFIG),
+        assertThat(() -> new DynamicCronAgent(TEST_TIMER_AGENT_CONFIG),
                 throwsException(IllegalArgumentException.class).withMessageContaining("Not a cron agent"));
     }
 

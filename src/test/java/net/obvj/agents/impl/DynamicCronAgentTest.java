@@ -16,12 +16,12 @@ import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.test.agents.valid.TestAgentWithNoNameAndTypeCronAndRunMethod;
 
 /**
- * Unit tests for the {@link AnnotatedCronAgent}.
+ * Unit tests for the {@link DynamicCronAgent}.
  *
  * @author oswaldo.bapvic.jr
  */
 @ExtendWith(MockitoExtension.class)
-class AnnotatedCronAgentTest
+class DynamicCronAgentTest
 {
     private static final Class<?> VALID_CRON_AGENT_CLASS = TestAgentWithNoNameAndTypeCronAndRunMethod.class;
 
@@ -40,7 +40,7 @@ class AnnotatedCronAgentTest
     void runTask_validAgent_noException()
     {
         Mockito.when(configuration.getClassName()).thenReturn(VALID_CRON_AGENT_CLASS.getName());
-        AnnotatedCronAgent annotatedTimerAgent = new AnnotatedCronAgent(configuration);
+        DynamicCronAgent annotatedTimerAgent = new DynamicCronAgent(configuration);
 
         assertNotNull(annotatedTimerAgent.getMetadata().getAgentInstance());
         assertNotNull(annotatedTimerAgent.getMetadata().getRunMethod());
@@ -52,7 +52,7 @@ class AnnotatedCronAgentTest
     void toString_validAgent_customString()
     {
         Mockito.when(configuration.getClassName()).thenReturn(VALID_CRON_AGENT_CLASS.getName());
-        AnnotatedCronAgent annotatedTimerAgent = new AnnotatedCronAgent(configuration);
+        DynamicCronAgent annotatedTimerAgent = new DynamicCronAgent(configuration);
 
         String string = annotatedTimerAgent.toString();
         assertThat(string, equalTo("AnnotatedCronAgent$" + VALID_CRON_AGENT_CLASS.getName()));

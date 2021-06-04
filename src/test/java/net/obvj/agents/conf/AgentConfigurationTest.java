@@ -1,14 +1,15 @@
 package net.obvj.agents.conf;
 
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.containsAll;
+import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static net.obvj.junit.utils.matchers.AdvancedMatchers.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,6 @@ import com.google.common.collect.Sets;
 
 import net.obvj.agents.AgentType;
 import net.obvj.agents.conf.AgentConfiguration.Builder;
-import net.obvj.agents.conf.AgentConfiguration.Source;
 import net.obvj.agents.exception.AgentConfigurationException;
 import net.obvj.agents.test.agents.invalid.TestAgentWithAllCustomParams;
 import net.obvj.agents.test.agents.invalid.TestAgentWithCustomNameAndType;
@@ -34,16 +34,17 @@ class AgentConfigurationTest
     private static final String CLASS_NAME1 = "className1";
     private static final String INTERVAL1 = "90 seconds";
 
-    private static final AgentConfiguration AGENT_TIMER_DEFAULT = new AgentConfiguration.Builder(AgentType.TIMER)
+    private static final AgentConfiguration AGENT_TIMER_DEFAULT = new AgentConfiguration.Builder().type(AgentType.TIMER)
             .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).build();
 
-    private static final AgentConfiguration AGENT_TIMER_DEFAULT_CLONE = new AgentConfiguration.Builder(AgentType.TIMER)
+    private static final AgentConfiguration AGENT_TIMER_DEFAULT_CLONE = new AgentConfiguration.Builder()
+            .type(AgentType.TIMER)
             .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).build();
 
-    private static final AgentConfiguration AGENT_TIMER_XML = new AgentConfiguration.Builder(AgentType.TIMER)
+    private static final AgentConfiguration AGENT_TIMER_XML = new AgentConfiguration.Builder().type(AgentType.TIMER)
             .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).build(Source.XML);
 
-    private static final AgentConfiguration AGENT_CRON_DEFAULT = new AgentConfiguration.Builder(AgentType.CRON)
+    private static final AgentConfiguration AGENT_CRON_DEFAULT = new AgentConfiguration.Builder().type(AgentType.CRON)
             .className(CLASS_NAME1).build();
 
     @Test
@@ -200,14 +201,14 @@ class AgentConfigurationTest
     @Test
     void build_noClassName_exception()
     {
-        assertThat(() -> new AgentConfiguration.Builder(AgentType.TIMER).build(),
+        assertThat(() -> new AgentConfiguration.Builder().type(AgentType.TIMER).build(),
                 throwsException(AgentConfigurationException.class).withMessage(Builder.MSG_CLASS_NAME_CANNOT_BE_NULL));
     }
 
     @Test
     void build_nullType_exception()
     {
-        assertThat(() -> new AgentConfiguration.Builder(null),
+        assertThat(() -> new AgentConfiguration.Builder().build(),
                 throwsException(NullPointerException.class).withMessage(Builder.MSG_TYPE_CANNOT_BE_NULL));
     }
 

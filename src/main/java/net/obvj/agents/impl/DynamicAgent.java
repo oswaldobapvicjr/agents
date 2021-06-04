@@ -13,11 +13,12 @@ import net.obvj.agents.util.AnnotationUtils.MethodFilter;
 
 /**
  * An object that prepares and holds the required metadata and infrastructure for the
- * execution of an object annotated as {@code @Agent}.
+ * execution of a dynamic agent, which may vary depending on the associated
+ * {@link AgentConfiguration}.
  *
  * @author oswaldo.bapvic.jr
  */
-public class AnnotatedAgent
+public class DynamicAgent
 {
     private final Class<?> agentClass;
     private final Method agentTaskMethod;
@@ -30,7 +31,7 @@ public class AnnotatedAgent
      * @throws InvalidClassException if any exception regarding a reflective operation (e.g.:
      *                               class or method not found) occurs
      */
-    public AnnotatedAgent(AgentConfiguration configuration)
+    public DynamicAgent(AgentConfiguration configuration)
     {
         try
         {

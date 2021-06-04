@@ -109,6 +109,13 @@
             <version>${performetrics.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.12.3</version>
+        </dependency>
+
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

@@ -1,14 +1,18 @@
 package net.obvj.agents.conf;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.util.CollectionUtils;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.obvj.agents.AgentType;
 import net.obvj.agents.annotation.Agent;
@@ -22,74 +26,13 @@ import net.obvj.agents.util.Exceptions;
  */
 public class AgentConfiguration
 {
-    /**
-     * Enumerates supported configuration sources and their precedence levels.
-     *
-     * @author oswaldo.bapvic.jr
-     */
-    public enum Source
-    {
-        /**
-         * The source applicable for configuration performed via the {@link Agent} annotation.
-         */
-        ANNOTATION(1),
-
-        /**
-         * The source applicable for configuration performed programmatically.
-         */
-        DEFAULT(2),
-
-        /**
-         * The source applicable for configuration via XML file.
-         */
-        XML(3);
-
-        private final int precedence;
-
-        private Source(int precedence)
-        {
-            this.precedence = precedence;
-        }
-
-        /**
-         * Returns the source with the highest precedence level among the specified sources
-         *
-         * @param sources an array of sources to be evaluated
-         * @return the source with the highest precedence level among the specified sources, or
-         *         {@link Source#DEFAULT} if no parameter specified
-         */
-        public static Source getHighestPrecedenceSource(Source... sources)
-        {
-            return getHighestPrecedenceSource(Arrays.stream(sources));
-        }
-
-        private static Source getHighestPrecedenceSource(Stream<Source> stream)
-        {
-            return stream.filter(Objects::nonNull)
-                         .sorted(Comparator.comparingInt(Source::getPrecedence).reversed())
-                         .findFirst()
-                         .orElse(DEFAULT);
-        }
-
-        /**
-         * Returns the precedence level for this source, ordered from highest to lowest, so that
-         * higher-level sources have more precedence/importance than the other ones.
-         *
-         * @return the precedence level for this source
-         */
-        public int getPrecedence()
-        {
-            return precedence;
-        }
-    }
-
     private String name;
     private AgentType type;
     private String className;
     private String interval;
     private Source source;
 
-    private AgentConfiguration(Builder builder, Source source)
+    protected AgentConfiguration(Builder builder, Source source)
     {
         this.name = builder.name;
         this.type = builder.type;
@@ -133,19 +76,22 @@ public class AgentConfiguration
         protected static final String MSG_TYPE_CANNOT_BE_NULL = "the agent type cannot be null";
         protected static final String MSG_CLASS_NAME_CANNOT_BE_NULL = "the class name cannot be null";
 
+        @JsonProperty
         private String name;
+
+        @JsonProperty
         private AgentType type;
+
+        @JsonProperty("class")
         private String className;
+
+        @JsonProperty
         private String interval;
 
-        /**
-         * Provides a new AgentConfiguration builder.
-         *
-         * @param type the mandatory {@link AgentType} to be set
-         */
-        public Builder(AgentType type)
+        public Builder type(AgentType type)
         {
-            this.type = Objects.requireNonNull(type, MSG_TYPE_CANNOT_BE_NULL);
+            this.type = type;
+            return this;
         }
 
         public Builder name(String name)
@@ -173,6 +119,8 @@ public class AgentConfiguration
 
         protected AgentConfiguration build(Source source)
         {
+            Objects.requireNonNull(type, MSG_TYPE_CANNOT_BE_NULL);
+
             if (StringUtils.isEmpty(className))
             {
                 throw new AgentConfigurationException(MSG_CLASS_NAME_CANNOT_BE_NULL);
@@ -213,7 +161,7 @@ public class AgentConfiguration
         String className = agentClass.getCanonicalName();
         String interval = annotation.interval();
 
-        Builder builder = new Builder(type).name(name).className(className).interval(interval);
+        Builder builder = new Builder().type(type).name(name).className(className).interval(interval);
         return builder.build(Source.ANNOTATION);
     }
 
