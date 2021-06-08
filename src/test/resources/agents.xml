@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<root>
+<configuration>
     <agents>
         <agent>
             <name>DummyAgentXml</name>
             <class>net.obvj.agents.test.agents.valid.DummyAgent</class>
-            <interval>1h</interval>
+            <interval>5h</interval>
             <type>timer</type>
         </agent>
         <agent>
@@ -15,4 +15,4 @@
             <type>cron</type>
         </agent>
     </agents>
-</root>
+</configuration>

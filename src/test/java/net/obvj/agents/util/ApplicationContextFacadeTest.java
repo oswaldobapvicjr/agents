@@ -18,7 +18,7 @@ class ApplicationContextFacadeTest
     @Test
     void testNoInstancesAllowed()
     {
-        assertThat(ApplicationContextFacade.class, instantiationNotAllowed());
+        assertThat(ApplicationContextFacade.class, instantiationNotAllowed().throwing(IllegalStateException.class));
     }
 
     @Test

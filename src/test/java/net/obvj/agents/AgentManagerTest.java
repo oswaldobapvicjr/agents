@@ -60,7 +60,7 @@ class AgentManagerTest
     private GlobalConfigurationHolder globalConfigurationHolder;
 
     @InjectMocks
-    private AgentManager manager = new AgentManager();
+    private AgentManager manager;
 
     private void mockDummyAgent()
     {
@@ -93,7 +93,6 @@ class AgentManagerTest
         {
             Set<AgentConfiguration> set = Sets.newHashSet(DUMMY_AGENT_CONFIG);
             scanner.when(() -> AnnotatedAgentScanner.scanPackage(PACKAGE1)).thenReturn(set);
-            when(globalConfigurationHolder.getHighestPrecedenceAgentConfigurations()).thenReturn(set);
             manager.scanPackage(PACKAGE1);
         }
         assertEquals(1, manager.getAgents().size());
@@ -108,7 +107,6 @@ class AgentManagerTest
         {
             Set<AgentConfiguration> set = Sets.newHashSet(DUMMY_AGENT_CONFIG, INVALID_AGENT_CONFIG);
             scanner.when(() -> AnnotatedAgentScanner.scanPackage(PACKAGE1)).thenReturn(set);
-            when(globalConfigurationHolder.getHighestPrecedenceAgentConfigurations()).thenReturn(set);
             manager.scanPackage(PACKAGE1);
         }
         assertEquals(1, manager.getAgents().size());

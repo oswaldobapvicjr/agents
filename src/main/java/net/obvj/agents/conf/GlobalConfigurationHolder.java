@@ -6,6 +6,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import net.obvj.agents.util.Functions;
 
@@ -17,7 +18,6 @@ public class GlobalConfigurationHolder
     private Map<Source, Set<AgentConfiguration>> agentConfigurationsBySource = new EnumMap<>(Source.class);
     private Map<String, Set<AgentConfiguration>> agentConfigurationsByClassName = new HashMap<>();
 
-
     public GlobalConfigurationHolder()
     {
         globalConfigurations = loadGlobalConfigurationsBySource();
@@ -26,10 +26,8 @@ public class GlobalConfigurationHolder
 
     private Map<Source, GlobalConfiguration> loadGlobalConfigurationsBySource()
     {
-        return Arrays.stream(Source.values())
-                .map(GlobalConfiguration::loadQuietly)
-                .filter(Optional::isPresent).map(Optional::get)
-                .collect(toGlobalConfigurationBySourceMap());
+        return Arrays.stream(Source.values()).map(GlobalConfiguration::loadQuietly).filter(Optional::isPresent)
+                .map(Optional::get).collect(toGlobalConfigurationBySourceMap());
     }
 
     private Collector<GlobalConfiguration, ?, EnumMap<Source, GlobalConfiguration>> toGlobalConfigurationBySourceMap()
@@ -68,15 +66,14 @@ public class GlobalConfigurationHolder
         return agentConfigurationsByClassName.get(className);
     }
 
-    public AgentConfiguration getHighestPrecedenceAgentConfigurationByClassName(String className)
+    public Optional<AgentConfiguration> getHighestPrecedenceConfigurationByClassName(String className)
     {
-        return AgentConfiguration.getHighestPrecedenceConfiguration(getAllAgentConfigurationsByClassName(className));
-    }
-
-    public Collection<AgentConfiguration> getHighestPrecedenceAgentConfigurations()
-    {
-        return agentConfigurationsByClassName.keySet().stream()
-                .map(this::getHighestPrecedenceAgentConfigurationByClassName).collect(Collectors.toSet());
+        Set<AgentConfiguration> agentConfigurations = getAllAgentConfigurationsByClassName(className);
+        if (CollectionUtils.isEmpty(agentConfigurations))
+        {
+            return Optional.empty();
+        }
+        return Optional.of(AgentConfiguration.getHighestPrecedenceConfiguration(agentConfigurations));
     }
 
 }

@@ -41,8 +41,12 @@ public class AgentManager
     private Map<String, AbstractAgent> agentsByName = new TreeMap<>();
     private Map<String, AgentConfiguration> agentsByClass = new TreeMap<>();
 
-    @Autowired
     private GlobalConfigurationHolder configurationHolder;
+
+    protected AgentManager(@Autowired GlobalConfigurationHolder holder)
+    {
+        configurationHolder = holder;
+    }
 
     /**
      * Returns the default instance of this component.
@@ -54,57 +58,67 @@ public class AgentManager
         return ApplicationContextFacade.getBean(AgentManager.class);
     }
 
-    private GlobalConfigurationHolder getConfigurationHolder()
-    {
-        if (configurationHolder == null)
-        {
-            configurationHolder = ApplicationContextFacade.getBean(GlobalConfigurationHolder.class);
-        }
-        return configurationHolder;
-    }
-
     /**
      * Scans the specified base package for agent candidates. Then, builds each agent and
-     * registers them inside this manager instance.
+     * registers them in the global configuration.
      *
      * @param basePackage the base package to search for agent candidates
      */
     public void scanPackage(String basePackage)
     {
-        // TODO: Split this in two methods. One for scanning and another one for loading
-        // (for there could be multiple scans, and only one fetch from global configuration)
-
         Collection<AgentConfiguration> agentCandidates = AnnotatedAgentScanner.scanPackage(basePackage);
-        getConfigurationHolder().addAll(agentCandidates);
-
-        LOG.info("Checking external configuration...");
-        Collection<AgentConfiguration> globalAgentCandidates = getConfigurationHolder()
-                .getHighestPrecedenceAgentConfigurations();
-
-        LOG.info("{} agent candidate(s) found including external configuration files", globalAgentCandidates.size());
 
         LOG.info("Instantiating agent(s)...");
 
-        globalAgentCandidates.stream().map(this::instantiateAgent).filter(Optional::isPresent).map(Optional::get)
+        agentCandidates.stream()
+                .map(this::findHighestPrecedenceConfiguration)
+                .map(this::instantiateAgentQuietly)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .forEach(this::addAgent);
 
-        logAgentsLoadedSuccessfully(globalAgentCandidates);
+        logAgentsLoadedSuccessfully(agentCandidates);
     }
 
-    private void logAgentsLoadedSuccessfully(Collection<AgentConfiguration> globalAgentCandidates)
+    private void logAgentsLoadedSuccessfully(Collection<AgentConfiguration> agentCandidates)
     {
-        LOG.info("{}/{} agent(s) loaded successfully: {}", agentsByClass.size(), globalAgentCandidates.size(),
+        LOG.info("{}/{} agent(s) loaded successfully: {}", agentsByClass.size(), agentCandidates.size(),
                 agentsByClass.values());
 
-        int numberOfFailedAgents = globalAgentCandidates.size() - agentsByClass.size();
-        if (numberOfFailedAgents > 0 && numberOfFailedAgents < globalAgentCandidates.size())
+        int numberOfFailedAgents = agentCandidates.size() - agentsByClass.size();
+        if (numberOfFailedAgents > 0 && numberOfFailedAgents < agentCandidates.size())
         {
             LOG.warn("{} agent(s) could not be loaded. Please check your configuration.", numberOfFailedAgents);
         }
-        else if (numberOfFailedAgents >= globalAgentCandidates.size())
+        else if (numberOfFailedAgents >= agentCandidates.size())
         {
             LOG.error("No agent could be loaded. Please check your configuration.");
         }
+    }
+
+    private AgentConfiguration findHighestPrecedenceConfiguration(AgentConfiguration agentConfiguration)
+    {
+        return configurationHolder.getHighestPrecedenceConfigurationByClassName(agentConfiguration.getClassName())
+                .orElse(agentConfiguration);
+    }
+
+    /**
+     * Creates an Agent for the given {@link AgentConfiguration}, provided that the same agent
+     * class was not loaded before.
+     *
+     * @param agentConfiguration the {@link AgentConfiguration} to be parsed
+     * @return an Optional which may contain a valid {@link Agent}, or
+     *         {@link Optional#empty()} if unable to parse the given configuration, or if the
+     *         agent was already loaded before
+     */
+    private Optional<AbstractAgent> instantiateAgentQuietly(AgentConfiguration agentConfiguration)
+    {
+        if (agentsByClass.containsKey(agentConfiguration.getClassName()))
+        {
+            LOG.debug("The agent {} was already instantiated", agentConfiguration.getClass());
+            return Optional.empty();
+        }
+        return instantiateAgent(agentConfiguration);
     }
 
     /**
