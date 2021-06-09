@@ -59,8 +59,9 @@ public class AgentManager
     }
 
     /**
-     * Scans the specified base package for agent candidates. Then, builds each agent and
-     * registers them in the global configuration.
+     * Scans the specified base package for agent candidates, then looks for higher precedence
+     * configuration sources and, finally, instantiates the agents, and keeps theirs reference
+     * for management purposes.
      *
      * @param basePackage the base package to search for agent candidates
      */
@@ -96,6 +97,15 @@ public class AgentManager
         }
     }
 
+    /**
+     * Looks up the global configuration for another higher-precedence configuration for the
+     * agent class, returning the highest-precedence {@link AgentConfiguration} to be applied.
+     *
+     * @param agentConfiguration the source {@link AgentConfiguration}
+     * @return the highest-precedence {@link AgentConfiguration} for the same agent class, or
+     *         the self parameter object, if no higher-precedence configuration found
+     * @since 0.2.0
+     */
     private AgentConfiguration findHighestPrecedenceConfiguration(AgentConfiguration agentConfiguration)
     {
         return configurationHolder.getHighestPrecedenceConfigurationByClassName(agentConfiguration.getClassName())
@@ -144,7 +154,7 @@ public class AgentManager
     }
 
     /**
-     * Registers a new agent for maintenance
+     * Adds a new agent for maintenance
      *
      * @param agent the agent to be registered
      */

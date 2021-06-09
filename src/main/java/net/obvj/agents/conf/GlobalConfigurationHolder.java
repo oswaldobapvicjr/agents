@@ -26,7 +26,7 @@ public class GlobalConfigurationHolder
 
     private Map<Source, GlobalConfiguration> loadGlobalConfigurationsBySource()
     {
-        return Arrays.stream(Source.values()).map(GlobalConfiguration::loadQuietly).filter(Optional::isPresent)
+        return Arrays.stream(Source.values()).map(GlobalConfiguration::from).filter(Optional::isPresent)
                 .map(Optional::get).collect(toGlobalConfigurationBySourceMap());
     }
 
