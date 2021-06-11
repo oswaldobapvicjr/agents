@@ -32,7 +32,7 @@ public class GlobalConfiguration
      * Returns a list of {@link AgentConfiguration} candidates, as retrieved by the associated
      * configuration {@link Source}.
      *
-     * @return a list of {@link AgentConfiguration} builders, as retrieved be the associated
+     * @return a list of {@link AgentConfiguration} builders, as retrieved by the associated
      *         configuration {@link Source}
      */
     public List<Builder> getAgents()
@@ -77,9 +77,9 @@ public class GlobalConfiguration
      *         or {@link Optional#empty()} if the specified source is null, or unable to parse
      *         the configuration source; never {@code null}
      */
-    public static Optional<GlobalConfiguration> from(Source source)
+    public static Optional<GlobalConfiguration> fromSource(Source source)
     {
-        return source != null ? source.loadGlobalConfigurationQuietly() : Optional.empty();
+        return source != null ? source.loadGlobalConfigurationFileQuietly() : Optional.empty();
     }
 
 }

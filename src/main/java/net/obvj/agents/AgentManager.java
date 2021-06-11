@@ -108,7 +108,7 @@ public class AgentManager
      */
     private AgentConfiguration findHighestPrecedenceConfiguration(AgentConfiguration agentConfiguration)
     {
-        return configurationHolder.getHighestPrecedenceConfigurationByClassName(agentConfiguration.getClassName())
+        return configurationHolder.getHighestPrecedenceAgentConfigurationByClassName(agentConfiguration.getClassName())
                 .orElse(agentConfiguration);
     }
 

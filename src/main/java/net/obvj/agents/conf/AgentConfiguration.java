@@ -271,7 +271,9 @@ public class AgentConfiguration
     private static Source getHighestPrecedenceSource(Collection<AgentConfiguration> agentConfigurations)
     {
         return Source.getHighestPrecedenceSource(
-                agentConfigurations.stream().filter(Objects::nonNull).map(AgentConfiguration::getSource));
+                agentConfigurations.stream()
+                                   .filter(Objects::nonNull)
+                                   .map(AgentConfiguration::getSource));
     }
 
     private static <T> T requireNonNullOrThrow(T object, Supplier<? extends RuntimeException> exception)

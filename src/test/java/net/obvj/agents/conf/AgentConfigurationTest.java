@@ -98,25 +98,6 @@ class AgentConfigurationTest
     }
 
     @Test
-    void getHighestPrecedenceSource_twoSources_highestPrecedenceSource()
-    {
-        // XML has higher precedence
-        assertThat(Source.getHighestPrecedenceSource(Source.XML, Source.ANNOTATION), is(Source.XML));
-    }
-
-    @Test
-    void getHighestPrecedenceSource_sinlgeSource_sameSource()
-    {
-        assertThat(Source.getHighestPrecedenceSource(Source.ANNOTATION), is(Source.ANNOTATION));
-    }
-
-    @Test
-    void getHighestPrecedenceSource_noSource_default()
-    {
-        assertThat(Source.getHighestPrecedenceSource(), is(Source.DEFAULT));
-    }
-
-    @Test
     void getHighestPrecedenceConfiguration_twoDifferentSources_highestPrecedence()
     {
         // XML has higher precedence

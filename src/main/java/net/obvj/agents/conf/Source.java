@@ -21,7 +21,22 @@ import net.obvj.agents.exception.AgentConfigurationException;
 import net.obvj.agents.util.Exceptions;
 
 /**
- * Enumerates supported configuration sources and their precedence levels.
+ * Enumerates the supported configuration sources and related metadata.
+ * <p>
+ * Each source has a fixed order of importance, which means that some of them may take
+ * precedence over other ones. The method {@code getHighestPrecedenceSource(Source...)}
+ * can be used as an auxiliary to determine the object to be used in a collection of
+ * sources.
+ * </p>
+ * <p>
+ * Additional metadata can also be defined for every configuration source, such as the
+ * default configuration file name and the supplying object mapper, although some
+ * parameters may not be available for all enumerated objects.
+ * </p>
+ * <p>
+ * Enumerated objects may also provide methods for loading a configuration file into a
+ * {@link GlobalConfiguration} object.
+ * </p>
  *
  * @author oswaldo.bapvic.jr
  */
@@ -29,67 +44,81 @@ public enum Source
 {
 
     /**
-     * The source applicable for configuration performed via the {@link Agent} annotation.
+     * The source applicable to configuration data performed via the {@link Agent} annotation.
      */
     ANNOTATION(1, null, null)
     {
         @Override
-        public Optional<GlobalConfiguration> loadGlobalConfiguration()
+        public Optional<GlobalConfiguration> loadGlobalConfigurationFile()
         {
             return Optional.empty();
         }
     },
 
     /**
-     * The source applicable for configuration performed programmatically with no specific
-     * source defined.
+     * The default source applicable to configuration data performed programmatically with no
+     * specific source defined.
      */
     DEFAULT(2, null, null)
     {
         @Override
-        public Optional<GlobalConfiguration> loadGlobalConfiguration()
+        public Optional<GlobalConfiguration> loadGlobalConfigurationFile()
         {
             return Optional.empty();
         }
     },
 
     /**
-     * The source applicable for configuration via XML file.
+     * The source applicable to configuration data loaded from an XML file.
      */
     XML(3, "agents.xml", XmlMapper::new),
 
     /**
-     * The source applicable for configuration via JSON file.
+     * The source applicable for configuration data loaded from a JSON file.
      */
     JSON(4, "agents.json", JsonMapper::new);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Source.class);
 
     private final int precedence;
-    private final String resourceName;
+    private final String defaultFileName;
     private final Supplier<ObjectMapper> objectMapperSupplier;
 
-    private Source(int precedence, String resourceName, Supplier<ObjectMapper> objectMapperSupplier)
+    /**
+     * Constructs a {@link Source} object with all parameters.
+     *
+     * @param precedence           an integer number representing the order of importance
+     *                             given to a {@code Source} where a {@code Source} with a
+     *                             higher value can take precedence over the other ones
+     * @param defaultFileName      the default resource/file name from a particular source
+     * @param objectMapperSupplier an {@link ObjectMapper} supplier for the configuration file
+     */
+    private Source(int precedence, String defaultFileName, Supplier<ObjectMapper> objectMapperSupplier)
     {
         this.precedence = precedence;
-        this.resourceName = resourceName;
+        this.defaultFileName = defaultFileName;
         this.objectMapperSupplier = objectMapperSupplier;
     }
 
-    public Optional<GlobalConfiguration> loadGlobalConfiguration()
+    public Optional<GlobalConfiguration> loadGlobalConfigurationFile()
     {
-        LOGGER.debug("Looking for global {} configuration file", this);
-        URL url = Source.class.getClassLoader().getResource(resourceName);
-        if (url == null)
-        {
-            LOGGER.debug("Global {} configuration file \"{}\" not found", this, resourceName);
-            return Optional.empty();
-        }
-        LOGGER.debug("Global {} configuration file \"{}\" found", this, resourceName);
-        return loadGlobalConfiguration(url);
+        return loadGlobalConfigurationFile(defaultFileName);
     }
 
-    public Optional<GlobalConfiguration> loadGlobalConfiguration(URL url)
+    public Optional<GlobalConfiguration> loadGlobalConfigurationFile(String fileName)
+    {
+        LOGGER.debug("Looking for global {} configuration file \"{}\"", this, fileName);
+        URL url = Source.class.getClassLoader().getResource(fileName);
+        if (url == null)
+        {
+            LOGGER.debug("Global {} configuration file \"{}\" not found", this, fileName);
+            return Optional.empty();
+        }
+        LOGGER.debug("Global {} configuration file \"{}\" found", this, fileName);
+        return loadGlobalConfigurationFile(url);
+    }
+
+    public Optional<GlobalConfiguration> loadGlobalConfigurationFile(URL url)
     {
         LOGGER.info("Reading global {} configuration file \"{}\"", this, url.getPath());
         try
@@ -106,11 +135,21 @@ public enum Source
         }
     }
 
-    public Optional<GlobalConfiguration> loadGlobalConfigurationQuietly()
+    public Optional<GlobalConfiguration> loadGlobalConfigurationFileQuietly()
+    {
+        return loadQuietly(this::loadGlobalConfigurationFile);
+    }
+
+    public Optional<GlobalConfiguration> loadGlobalConfigurationFileQuietly(String fileName)
+    {
+        return loadQuietly(() -> loadGlobalConfigurationFile(fileName));
+    }
+
+    private Optional<GlobalConfiguration> loadQuietly(Supplier<Optional<GlobalConfiguration>> supplier)
     {
         try
         {
-            return loadGlobalConfiguration();
+            return supplier.get();
         }
         catch (AgentConfigurationException exception)
         {
@@ -118,6 +157,7 @@ public enum Source
             return Optional.empty();
         }
     }
+
 
     /**
      * Returns the source with the highest precedence level among the specified sources
@@ -133,13 +173,15 @@ public enum Source
 
     protected static Source getHighestPrecedenceSource(Stream<Source> stream)
     {
-        return stream.filter(Objects::nonNull).sorted(Comparator.comparingInt(Source::getPrecedence).reversed())
-                .findFirst().orElse(DEFAULT);
+        return stream.filter(Objects::nonNull)
+                     .sorted(Comparator.comparingInt(Source::getPrecedence).reversed())
+                     .findFirst().orElse(DEFAULT);
     }
 
     /**
-     * Returns the precedence level for this source, ordered from highest to lowest, so that
-     * higher-level sources have more precedence/importance than the other ones.
+     * Returns the precedence level, i.e., an integer number representing the order of
+     * importance given to a {@code Source}, where a {@code Source} with a higher value can
+     * take precedence over the other ones.
      *
      * @return the precedence level for this source
      */
