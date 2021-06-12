@@ -69,6 +69,12 @@ public class AgentManager
     {
         Collection<AgentConfiguration> agentCandidates = AnnotatedAgentScanner.scanPackage(basePackage);
 
+        if (agentCandidates.isEmpty())
+        {
+            LOG.warn("No agent found in base package \"{}\"", basePackage);
+            return;
+        }
+
         LOG.info("Instantiating agent(s)...");
 
         agentCandidates.stream()
@@ -78,10 +84,10 @@ public class AgentManager
                 .map(Optional::get)
                 .forEach(this::addAgent);
 
-        logAgentsLoadedSuccessfully(agentCandidates);
+        logAfterScanPackage(agentCandidates);
     }
 
-    private void logAgentsLoadedSuccessfully(Collection<AgentConfiguration> agentCandidates)
+    private void logAfterScanPackage(Collection<AgentConfiguration> agentCandidates)
     {
         LOG.info("{}/{} agent(s) loaded successfully: {}", agentsByClass.size(), agentCandidates.size(),
                 agentsByClass.values());
@@ -89,11 +95,11 @@ public class AgentManager
         int numberOfFailedAgents = agentCandidates.size() - agentsByClass.size();
         if (numberOfFailedAgents > 0 && numberOfFailedAgents < agentCandidates.size())
         {
-            LOG.warn("{} agent(s) could not be loaded. Please check your configuration.", numberOfFailedAgents);
+            LOG.warn("{} agent(s) could not be loaded. Please check your configuration setup.", numberOfFailedAgents);
         }
         else if (numberOfFailedAgents >= agentCandidates.size())
         {
-            LOG.error("No agent could be loaded. Please check your configuration.");
+            LOG.error("No agent could be loaded. Please check your configuration setup.");
         }
     }
 

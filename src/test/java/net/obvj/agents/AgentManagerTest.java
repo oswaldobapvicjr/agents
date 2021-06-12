@@ -95,22 +95,44 @@ class AgentManagerTest
             scanner.when(() -> AnnotatedAgentScanner.scanPackage(PACKAGE1)).thenReturn(set);
             manager.scanPackage(PACKAGE1);
         }
-        assertEquals(1, manager.getAgents().size());
+        assertThat(manager.getAgents().size(), equalTo(1));
         assertNotNull(manager.findAgentByName(DUMMY_AGENT));
     }
 
     @Test
     void scanPackage_mockedPackageAndValidAndInvalidAgent_instantiatesValidAgentOnly()
     {
-
         try (MockedStatic<AnnotatedAgentScanner> scanner = mockStatic(AnnotatedAgentScanner.class))
         {
             Set<AgentConfiguration> set = Sets.newHashSet(DUMMY_AGENT_CONFIG, INVALID_AGENT_CONFIG);
             scanner.when(() -> AnnotatedAgentScanner.scanPackage(PACKAGE1)).thenReturn(set);
             manager.scanPackage(PACKAGE1);
         }
-        assertEquals(1, manager.getAgents().size());
+        assertThat(manager.getAgents().size(), equalTo(1));
         assertNotNull(manager.findAgentByName(DUMMY_AGENT));
+    }
+
+    @Test
+    void scanPackage_packageContainingNoAgent_noAgentLoadedAndNoException()
+    {
+        try (MockedStatic<AnnotatedAgentScanner> scanner = mockStatic(AnnotatedAgentScanner.class))
+        {
+            scanner.when(() -> AnnotatedAgentScanner.scanPackage(PACKAGE1)).thenReturn(Collections.emptySet());
+            manager.scanPackage(PACKAGE1);
+        }
+        assertThat(manager.getAgents().size(), equalTo(0));
+    }
+
+    @Test
+    void scanPackage_mockedPackageAndInvalidAgentOnly_noAgentLoadedAndNoException()
+    {
+        try (MockedStatic<AnnotatedAgentScanner> scanner = mockStatic(AnnotatedAgentScanner.class))
+        {
+            Set<AgentConfiguration> set = Collections.singleton(INVALID_AGENT_CONFIG);
+            scanner.when(() -> AnnotatedAgentScanner.scanPackage(PACKAGE1)).thenReturn(set);
+            manager.scanPackage(PACKAGE1);
+        }
+        assertThat(manager.getAgents().size(), equalTo(0));
     }
 
     @Test

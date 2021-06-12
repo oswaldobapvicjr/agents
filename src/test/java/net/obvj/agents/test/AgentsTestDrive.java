@@ -9,10 +9,6 @@ public class AgentsTestDrive
         AgentManager agentManager = AgentManager.defaultInstance();
         agentManager.scanPackage("net.obvj.agents.test.agents.valid");
         agentManager.startAllAgents();
-
-        agentManager.stopAgent("net.obvj.agents.test.agents.valid.DummyAgent");
-        agentManager.resetAgent("net.obvj.agents.test.agents.valid.DummyAgent");
-        agentManager.startAgent("net.obvj.agents.test.agents.valid.DummyAgent");
     }
 
 }
