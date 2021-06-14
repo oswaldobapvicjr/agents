@@ -28,9 +28,20 @@ public class GlobalConfigurationHolder
      * Builds a {@link GlobalConfigurationHolder}, loaded with configuration data mapped from
      * all of the supported configuration sources.
      */
-    protected GlobalConfigurationHolder()
+    public GlobalConfigurationHolder()
     {
-        globalConfigurations = loadGlobalConfigurationsBySource();
+        this(loadGlobalConfigurationsBySource());
+    }
+
+    /**
+     * This method builds a new {@link GlobalConfigurationHolder} with a preset map
+     * <strong>for unit testing purposes</strong>.
+     *
+     * @param globalConfigurations the map to set
+     */
+    protected GlobalConfigurationHolder(Map<Source, GlobalConfiguration> globalConfigurations)
+    {
+        this.globalConfigurations = globalConfigurations;
         fillAuxiliaryMap();
     }
 
@@ -40,7 +51,7 @@ public class GlobalConfigurationHolder
      *
      * @return a map of {@link GlobalConfiguration} objects by {@link Source}
      */
-    private Map<Source, GlobalConfiguration> loadGlobalConfigurationsBySource()
+    private static Map<Source, GlobalConfiguration> loadGlobalConfigurationsBySource()
     {
         return Arrays.stream(Source.values())
                      .map(GlobalConfiguration::fromSource)
@@ -49,13 +60,13 @@ public class GlobalConfigurationHolder
                      .collect(toGlobalConfigurationBySourceMap());
     }
 
-    private Collector<GlobalConfiguration, ?, EnumMap<Source, GlobalConfiguration>> toGlobalConfigurationBySourceMap()
+    private static Collector<GlobalConfiguration, ?, EnumMap<Source, GlobalConfiguration>> toGlobalConfigurationBySourceMap()
     {
         return Collectors.toMap(GlobalConfiguration::getSource, Function.identity(), Functions.lastWinsMerger(),
                 () -> new EnumMap<>(Source.class));
     }
 
-    private void fillAuxiliaryMap()
+    protected void fillAuxiliaryMap()
     {
         globalConfigurations.forEach((source, configuration) -> configuration.getAgents().stream()
                 .map(builder -> builder.build(source))

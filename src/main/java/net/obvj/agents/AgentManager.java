@@ -84,23 +84,7 @@ public class AgentManager
                 .map(Optional::get)
                 .forEach(this::addAgent);
 
-        logAfterScanPackage(agentCandidates);
-    }
-
-    private void logAfterScanPackage(Collection<AgentConfiguration> agentCandidates)
-    {
-        LOG.info("{}/{} agent(s) loaded successfully: {}", agentsByClass.size(), agentCandidates.size(),
-                agentsByClass.values());
-
-        int numberOfFailedAgents = agentCandidates.size() - agentsByClass.size();
-        if (numberOfFailedAgents > 0 && numberOfFailedAgents < agentCandidates.size())
-        {
-            LOG.warn("{} agent(s) could not be loaded. Please check your configuration setup.", numberOfFailedAgents);
-        }
-        else if (numberOfFailedAgents >= agentCandidates.size())
-        {
-            LOG.error("No agent could be loaded. Please check your configuration setup.");
-        }
+        LOG.info("Instantiation complete. Now managing {} agents: {}", agentsByClass.size(), agentsByClass.values());
     }
 
     /**

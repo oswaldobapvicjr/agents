@@ -136,6 +136,26 @@ class AgentManagerTest
     }
 
     @Test
+    void scanPackage_mockedPackageAndValidAgentsOnlyAndCalledTwice_noChangeAfterSecondCall()
+    {
+        try (MockedStatic<AnnotatedAgentScanner> scanner = mockStatic(AnnotatedAgentScanner.class))
+        {
+            Set<AgentConfiguration> set = Sets.newHashSet(DUMMY_AGENT_CONFIG);
+            scanner.when(() -> AnnotatedAgentScanner.scanPackage(PACKAGE1)).thenReturn(set);
+
+            manager.scanPackage(PACKAGE1);
+            assertThat(manager.getAgents().size(), equalTo(1));
+            assertNotNull(manager.findAgentByName(DUMMY_AGENT));
+
+            // Second call
+            manager.scanPackage(PACKAGE1);
+            assertThat(manager.getAgents().size(), equalTo(1));
+            assertNotNull(manager.findAgentByName(DUMMY_AGENT));
+
+        }
+    }
+
+    @Test
     void getAgents_singleAgentRegistered_singletonList()
     {
         mockDummyAgent();
