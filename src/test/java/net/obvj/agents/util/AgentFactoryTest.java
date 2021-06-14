@@ -14,8 +14,8 @@ import net.obvj.agents.AbstractAgent.State;
 import net.obvj.agents.CronAgent;
 import net.obvj.agents.TimerAgent;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.impl.AnnotatedCronAgent;
-import net.obvj.agents.impl.AnnotatedTimerAgent;
+import net.obvj.agents.impl.DynamicCronAgent;
+import net.obvj.agents.impl.DynamicTimerAgent;
 import net.obvj.agents.test.agents.valid.DummyAgent;
 import net.obvj.agents.test.agents.valid.TestAgentWithNoNameAndTypeTimerAndRunMethod;
 
@@ -44,14 +44,14 @@ class AgentFactoryTest
     @Test
     void create_timerAgent30Seconds()
     {
-        AgentConfiguration configuration = new AgentConfiguration.Builder(TIMER).name(DUMMY_AGENT)
+        AgentConfiguration configuration = new AgentConfiguration.Builder().type(TIMER).name(DUMMY_AGENT)
                 .className(DUMMY_AGENT_CLASS).interval(INTERVAL_TIMER_30_SECONDS).build();
 
         TimerAgent timerAgent = (TimerAgent) AgentFactory.create(configuration);
 
         assertThat(timerAgent.getName(), is(DUMMY_AGENT));
         assertThat(timerAgent.getType(), is(TIMER));
-        assertThat(timerAgent.getClass(), is(equalTo(AnnotatedTimerAgent.class)));
+        assertThat(timerAgent.getClass(), is(equalTo(DynamicTimerAgent.class)));
         assertThat(timerAgent.getConfiguration().getClassName(), is(DummyAgent.class.getName()));
 
         assertThat(timerAgent.getConfiguration(), is(configuration));
@@ -66,14 +66,14 @@ class AgentFactoryTest
     @Test
     void create_timerAgentDefaultValues()
     {
-        AgentConfiguration configuration = new AgentConfiguration.Builder(TIMER).name(DUMMY_AGENT)
+        AgentConfiguration configuration = new AgentConfiguration.Builder().type(TIMER).name(DUMMY_AGENT)
                 .className(DUMMY_AGENT_CLASS).build();
 
         TimerAgent timerAgent = (TimerAgent) AgentFactory.create(configuration);
 
         assertThat(timerAgent.getName(), is(DUMMY_AGENT));
         assertThat(timerAgent.getType(), is(TIMER));
-        assertThat(timerAgent.getClass(), is(equalTo(AnnotatedTimerAgent.class)));
+        assertThat(timerAgent.getClass(), is(equalTo(DynamicTimerAgent.class)));
         assertThat(timerAgent.getConfiguration().getClassName(), is(DummyAgent.class.getName()));
         assertThat(timerAgent.getConfiguration(), is(configuration));
 
@@ -87,11 +87,11 @@ class AgentFactoryTest
     @Test
     void create_annotatedTimerAgent()
     {
-        AgentConfiguration configuration = new AgentConfiguration.Builder(TIMER).name(DUMMY_AGENT)
+        AgentConfiguration configuration = new AgentConfiguration.Builder().type(TIMER).name(DUMMY_AGENT)
                 .className(CRON_TEST_AGENT_CLASS.getName()).interval(INTERVAL_TIMER_30_SECONDS).build();
 
         TimerAgent timerAgent = (TimerAgent) AgentFactory.create(configuration);
-        assertThat(timerAgent, instanceOf(AnnotatedTimerAgent.class));
+        assertThat(timerAgent, instanceOf(DynamicTimerAgent.class));
 
         assertThat(timerAgent.getName(), is(DUMMY_AGENT));
         assertThat(timerAgent.getType(), is(TIMER));
@@ -107,11 +107,11 @@ class AgentFactoryTest
     @Test
     void create_annotatedCronAgent()
     {
-        AgentConfiguration configuration = new AgentConfiguration.Builder(CRON).name(DUMMY_AGENT)
+        AgentConfiguration configuration = new AgentConfiguration.Builder().type(CRON).name(DUMMY_AGENT)
                 .className(CRON_TEST_AGENT_CLASS.getName()).interval(INTERVAL_CRON_EVERY_TWO_MINUTES).build();
 
         CronAgent cronAgent = (CronAgent) AgentFactory.create(configuration);
-        assertThat(cronAgent, instanceOf(AnnotatedCronAgent.class));
+        assertThat(cronAgent, instanceOf(DynamicCronAgent.class));
 
         assertThat(cronAgent.getName(), is(DUMMY_AGENT));
         assertThat(cronAgent.getType(), is(CRON));

@@ -26,7 +26,7 @@ class ExceptionsTest
     @Test
     void constructor_instantiationNotAllowed()
     {
-        assertThat(Exceptions.class, instantiationNotAllowed());
+        assertThat(Exceptions.class, instantiationNotAllowed().throwing(IllegalStateException.class));
     }
 
     @Test

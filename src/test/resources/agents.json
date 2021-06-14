@@ -1,0 +1,14 @@
+{
+  "agents": [
+    {
+      "class": "net.obvj.agents.test.agents.valid.DummyAgent",
+      "type": "cron",
+      "interval": "*/2 * * * MON-FRI"
+    },
+    {
+      "class": "net.obvj.agents.test.agents.invalid.TestClassNotAgent",
+      "type": "timer",
+      "interval": "10s"
+    }
+  ]
+}

@@ -64,7 +64,7 @@ class AnnotationUtilsTest
     @Test
     void constructor_instantiationNotAllowed()
     {
-        assertThat(AnnotationUtils.class, instantiationNotAllowed());
+        assertThat(AnnotationUtils.class, instantiationNotAllowed().throwing(IllegalStateException.class));
     }
 
     @Test

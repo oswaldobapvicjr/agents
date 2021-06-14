@@ -1,0 +1,9 @@
+{
+  "agents": [
+    {
+      "class": "net.obvj.agents.test.agents.valid.DummyAgent",
+      "type": "cron",
+      "interval": "*/5 * * 1988 MON-FRI"
+    }
+  ]
+}

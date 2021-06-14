@@ -56,7 +56,7 @@ public class MyCronAgent {
 1. Scan one or more base packages to search for agents
 
 ```java
-AgentManager manager = AgentManager.getInstance();
+AgentManager manager = AgentManager.defaultInstance();
 manager.scanPackage("com.mycompany.agents");
 ```
 

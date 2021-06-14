@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <agents>
+        <agent>
+            <name>DummyAgentXml</name>
+            <class>net.obvj.agents.test.agents.valid.DummyAgent</class>
+            <interval>5h</interval>
+            <type>timer</type>
+        </agent>
+        <agent>
+            <name>TestTimerAgent1XML</name>
+            <class>net.obvj.agents.test.agents.valid.TestTimerAgent1</class>
+            <interval>*/2 * * * FRI-SUN</interval>
+            <type>cron</type>
+        </agent>
+    </agents>
+</configuration>

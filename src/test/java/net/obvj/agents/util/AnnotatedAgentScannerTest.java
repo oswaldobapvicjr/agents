@@ -43,7 +43,7 @@ class AnnotatedAgentScannerTest
     @Test
     void constructor_instantiationNotAllowed()
     {
-        assertThat(AnnotatedAgentScanner.class, instantiationNotAllowed());
+        assertThat(AnnotatedAgentScanner.class, instantiationNotAllowed().throwing(IllegalStateException.class));
     }
 
     @Test

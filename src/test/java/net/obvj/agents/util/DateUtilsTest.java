@@ -47,7 +47,7 @@ class DateUtilsTest
     @Test
     void constructor_instantiationNotAllowed()
     {
-        assertThat(DateUtils.class, instantiationNotAllowed());
+        assertThat(DateUtils.class, instantiationNotAllowed().throwing(IllegalStateException.class));
     }
 
     @Test
