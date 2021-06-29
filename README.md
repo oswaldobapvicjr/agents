@@ -2,10 +2,6 @@
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/oswaldobapvicjr/agents/Java%20CI%20with%20Maven)](https://github.com/oswaldobapvicjr/agents/actions/workflows/maven.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/oswaldobapvicjr/agents)](https://codecov.io/gh/oswaldobapvicjr/agents)
-
-
-[![Build Status](https://travis-ci.org/oswaldobapvicjr/agents.svg?branch=main)](https://travis-ci.org/oswaldobapvicjr/agents)
-[![Coverage Status](https://coveralls.io/repos/github/oswaldobapvicjr/agents/badge.svg?branch=main)](https://coveralls.io/github/oswaldobapvicjr/agents?branch=main)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.obvj/agents/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.obvj/agents)
 [![Javadoc](https://javadoc.io/badge2/net.obvj/agents/javadoc.svg)](https://javadoc.io/doc/net.obvj/agents)
 
