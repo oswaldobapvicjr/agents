@@ -1,0 +1,7 @@
+agents:
+- class: net.obvj.agents.test.agents.valid.TestTimerAgentThrowingException
+  type: cron
+  interval: 0 0 31 12 *
+- class: net.obvj.agents.test.agents.valid.DummyAgent
+  type: timer
+  interval: 15 minutes

@@ -1,0 +1,7 @@
+agents:
+- class: com.mycompany.agents.Agent1
+  type: timer
+  interval: 30s
+- class: com.mycompany.agents.Agent2
+  type: cron
+  interval: 0 0 * * SUN

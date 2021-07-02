@@ -112,6 +112,38 @@ public class AgentConfiguration
             return this;
         }
 
+        /**
+         * @return the name
+         */
+        public String getName()
+        {
+            return name;
+        }
+
+        /**
+         * @return the type
+         */
+        public AgentType getType()
+        {
+            return type;
+        }
+
+        /**
+         * @return the className
+         */
+        public String getClassName()
+        {
+            return className;
+        }
+
+        /**
+         * @return the interval
+         */
+        public String getInterval()
+        {
+            return interval;
+        }
+
         public AgentConfiguration build()
         {
             return build(Source.DEFAULT);

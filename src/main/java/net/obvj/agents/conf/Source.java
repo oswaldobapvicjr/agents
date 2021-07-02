@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.exception.AgentConfigurationException;
@@ -76,7 +77,12 @@ public enum Source
     /**
      * The source applicable for configuration data loaded from a JSON file.
      */
-    JSON(4, "agents.json", JsonMapper::new);
+    JSON(4, "agents.json", JsonMapper::new),
+
+    /**
+     * The source applicable for configuration data loaded from a YAML file.
+     */
+    YAML(5, "agents.yaml", YAMLMapper::new);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Source.class);
 
