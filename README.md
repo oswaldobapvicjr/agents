@@ -35,6 +35,20 @@ public class MyTimerAgent {
 
 A Cron agent can be executed at specific dates and times, comparable to the Cron Service available in Unix/Linux systems. Although they are more robust in terms of configuration flexibility, the interval between executions cannot be lower than 1 minute.
 
+Cron systax has five fields separated by a space, and each field represent a unit of time.
+
+```bash
+┌───────────── minute (0 - 59)
+│ ┌───────────── hour (0 - 23)
+│ │ ┌───────────── day of the month (1 - 31)
+│ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+│ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+│ │ │ │ │                                   
+│ │ │ │ │
+│ │ │ │ │
+* * * * *
+```
+
 For example, the following agent is configured to execute every weekday at 2:00 AM:
 
 ```java
