@@ -1,14 +1,20 @@
 package net.obvj.agents.conf;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
-import net.obvj.agents.util.Functions;
+import net.obvj.confectory.ConfigurationBuilder;
+import net.obvj.confectory.TypeSafeConfigurationContainer;
+import net.obvj.confectory.mapper.JacksonJsonToObjectMapper;
+import net.obvj.confectory.mapper.JacksonXMLToObjectMapper;
+import net.obvj.confectory.mapper.JacksonYAMLToObjectMapper;
+import net.obvj.confectory.source.SourceFactory;
 
 /**
  * An object that holds multiple configuration objects for the several configuration
@@ -20,9 +26,9 @@ import net.obvj.agents.util.Functions;
 @Component
 public class GlobalConfigurationHolder
 {
-    private Map<Source, GlobalConfiguration> globalConfigurations;
+    private final TypeSafeConfigurationContainer<GlobalConfiguration> container = new TypeSafeConfigurationContainer<>();
 
-    private Map<String, Set<AgentConfiguration>> agentConfigurationsByClassName = new HashMap<>();
+    private Map<String, AgentConfiguration> agentsByClassName;
 
     /**
      * Builds a {@link GlobalConfigurationHolder}, loaded with configuration data mapped from
@@ -30,54 +36,36 @@ public class GlobalConfigurationHolder
      */
     public GlobalConfigurationHolder()
     {
-        this(loadGlobalConfigurationsBySource());
-    }
-
-    /**
-     * This method builds a new {@link GlobalConfigurationHolder} with a preset map
-     * <strong>for unit testing purposes</strong>.
-     *
-     * @param globalConfigurations the map to set
-     */
-    protected GlobalConfigurationHolder(Map<Source, GlobalConfiguration> globalConfigurations)
-    {
-        this.globalConfigurations = globalConfigurations;
+        fillContainer();
         fillAuxiliaryMap();
     }
 
-    /**
-     * Iterates through all supported configuration sources, then loads the mapped
-     * configuration data into {@link GlobalConfiguration} objects.
-     *
-     * @return a map of {@link GlobalConfiguration} objects by {@link Source}
-     */
-    private static Map<Source, GlobalConfiguration> loadGlobalConfigurationsBySource()
+    private void fillContainer()
     {
-        return Arrays.stream(Source.values())
-                     .map(GlobalConfiguration::fromSource)
-                     .filter(Optional::isPresent)
-                     .map(Optional::get)
-                     .collect(toGlobalConfigurationBySourceMap());
+        container.add(new ConfigurationBuilder<GlobalConfiguration>().precedence(3)
+                .source(SourceFactory.classpathFileSource("1agents.xml"))
+                .mapper(new JacksonXMLToObjectMapper<>(GlobalConfiguration.class)).optional().lazy().build());
+
+        container.add(new ConfigurationBuilder<GlobalConfiguration>().precedence(4)
+                .source(SourceFactory.classpathFileSource("1agents.json"))
+                .mapper(new JacksonJsonToObjectMapper<>(GlobalConfiguration.class)).optional().lazy().build());
+
+        container.add(new ConfigurationBuilder<GlobalConfiguration>().precedence(5)
+                .source(SourceFactory.classpathFileSource("1agents.yaml"))
+                .mapper(new JacksonYAMLToObjectMapper<>(GlobalConfiguration.class)).optional().lazy().build());
     }
 
-    private static Collector<GlobalConfiguration, ?, EnumMap<Source, GlobalConfiguration>> toGlobalConfigurationBySourceMap()
+    private void fillAuxiliaryMap()
     {
-        return Collectors.toMap(GlobalConfiguration::getSource, Function.identity(), Functions.lastWinsMerger(),
-                () -> new EnumMap<>(Source.class));
+        GlobalConfiguration config = container.getBean();
+        agentsByClassName = getAgentConfigurationBuilders(config).stream()
+                .map(AgentConfiguration.Builder::build)
+                .collect(Collectors.toMap(AgentConfiguration::getClassName, Function.identity()));
     }
 
-    protected void fillAuxiliaryMap()
+    private List<AgentConfiguration.Builder> getAgentConfigurationBuilders(GlobalConfiguration globalConfiguration)
     {
-        globalConfigurations.forEach((source, configuration) -> configuration.getAgents().stream()
-                .map(builder -> builder.build(source))
-                .forEach(this::add));
-    }
-
-    private void add(AgentConfiguration configuration)
-    {
-        String className = configuration.getClassName();
-        getAgentConfigurationsMapByClassName().computeIfAbsent(className, key -> new HashSet<>())
-                                              .add(configuration);
+        return globalConfiguration != null ? globalConfiguration.getAgents() : Collections.emptyList();
     }
 
     /**
@@ -85,22 +73,13 @@ public class GlobalConfigurationHolder
      * given class name.
      *
      * @param className the agent class name to be searched
-     * @return the highest-precedence {@link AgentConfiguration} for the specified class name,
-     *         or {@link Optional#empty()} if no associated {@link AgentConfiguration} found
+     * @return the highest-precedence available {@link AgentConfiguration} object for the
+     *         specified class name, or {@link Optional#empty()} if no associated
+     *         {@link AgentConfiguration} found
      */
-    public Optional<AgentConfiguration> getHighestPrecedenceAgentConfigurationByClassName(String className)
+    public Optional<AgentConfiguration> getHighestPrecedenceConfigurationByAgentClassName(String className)
     {
-        Set<AgentConfiguration> agentConfigurations = agentConfigurationsByClassName.get(className);
-        if (CollectionUtils.isEmpty(agentConfigurations))
-        {
-            return Optional.empty();
-        }
-        return Optional.of(AgentConfiguration.getHighestPrecedenceConfiguration(agentConfigurations));
-    }
-
-    protected Map<String, Set<AgentConfiguration>> getAgentConfigurationsMapByClassName()
-    {
-        return agentConfigurationsByClassName;
+        return Optional.ofNullable(agentsByClassName.get(className));
     }
 
 }

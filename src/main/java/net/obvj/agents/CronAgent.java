@@ -100,9 +100,9 @@ public abstract class CronAgent extends AbstractAgent
                 schedule.schedule(this, timeToNextExecution.toMillis(), TimeUnit.MILLISECONDS);
                 nextExecutionDate = DateUtils.now().plus(timeToNextExecution);
 
-                if (LOG.isDebugEnabled())
+                if (LOG.isInfoEnabled())
                 {
-                    LOG.debug("{} execution of {} will be at: {}", firstExecution ? "First" : "Next", getName(),
+                    LOG.info("{} execution of {} will be at: {}", firstExecution ? "First" : "Next", getName(),
                             DateUtils.formatDate(nextExecutionDate));
                 }
             }

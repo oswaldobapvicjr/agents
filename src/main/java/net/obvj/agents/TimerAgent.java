@@ -67,9 +67,9 @@ public abstract class TimerAgent extends AbstractAgent
         schedule.scheduleAtFixedRate(this, (start.getTime() - System.currentTimeMillis()), interval.toMillis(),
                 java.util.concurrent.TimeUnit.MILLISECONDS);
 
-        if (LOG.isDebugEnabled())
+        if (LOG.isInfoEnabled())
         {
-            LOG.debug("First execution of {} will be at: {}", getName(), DateUtils.formatDate(start));
+            LOG.info("First execution of {} will be at: {}", getName(), DateUtils.formatDate(start));
         }
     }
 

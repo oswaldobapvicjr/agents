@@ -2,20 +2,14 @@ package net.obvj.agents.conf;
 
 import static net.obvj.agents.AgentType.CRON;
 import static net.obvj.agents.AgentType.TIMER;
-import static net.obvj.agents.conf.Source.JSON;
-import static net.obvj.agents.conf.Source.XML;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.agents.conf.AgentConfiguration.Builder;
@@ -66,51 +60,8 @@ class GlobalConfigurationHolderTest
     @Mock
     private GlobalConfiguration globalConfigJson;
 
-    @Spy
-    private Map<Source, GlobalConfiguration> globalConfigurations = new EnumMap<>(Source.class);
-
     @InjectMocks
     private GlobalConfigurationHolder globalConfigurationHolder;
 
-    @BeforeEach
-    public void setup()
-    {
-        globalConfigurations.put(XML, globalConfigXml);
-        globalConfigurations.put(JSON, globalConfigJson);
-
-        when(globalConfigXml.getAgents()).thenReturn(AGENTS_XML);
-        when(globalConfigJson.getAgents()).thenReturn(AGENTS_JSON);
-
-        globalConfigurationHolder.fillAuxiliaryMap();
-    }
-
-    @Test
-    void getHighestPrecedenceAgentConfigurationByClassName_validClassFromXmlOnly_xmlConfigReturned()
-    {
-        AgentConfiguration agentConfiguration = globalConfigurationHolder
-                .getHighestPrecedenceAgentConfigurationByClassName(TIMER_AGENT_CLASS_NAME).get();
-
-        assertThat(agentConfiguration.getSource(), equalTo(XML));
-        assertThat(agentConfiguration.getType(), equalTo(TIMER));
-        assertThat(agentConfiguration.getInterval(), equalTo(INTERVAL_TIMER_8_HOURS));
-    }
-
-    @Test
-    void getHighestPrecedenceAgentConfigurationByClassName_validClassFromXmlAndJson_jsonConfigReturned()
-    {
-        AgentConfiguration agentConfiguration = globalConfigurationHolder
-                .getHighestPrecedenceAgentConfigurationByClassName(DUMMY_AGENT_CLASS_NAME).get();
-
-        assertThat(agentConfiguration.getSource(), equalTo(JSON));
-        assertThat(agentConfiguration.getType(), equalTo(CRON));
-        assertThat(agentConfiguration.getInterval(), equalTo(INTERVAL_CRON_ONCE_A_YEAR));
-    }
-
-    @Test
-    void getHighestPrecedenceAgentConfigurationByClassName_unknownClass_empty()
-    {
-        assertThat(globalConfigurationHolder.getHighestPrecedenceAgentConfigurationByClassName("Invalid"),
-                equalTo(Optional.empty()));
-    }
 
 }
