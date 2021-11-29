@@ -43,15 +43,15 @@ public class GlobalConfigurationHolder
     private void fillContainer()
     {
         container.add(new ConfigurationBuilder<GlobalConfiguration>().precedence(3)
-                .source(SourceFactory.classpathFileSource("1agents.xml"))
+                .source(SourceFactory.classpathFileSource("agents.xml"))
                 .mapper(new JacksonXMLToObjectMapper<>(GlobalConfiguration.class)).optional().lazy().build());
 
         container.add(new ConfigurationBuilder<GlobalConfiguration>().precedence(4)
-                .source(SourceFactory.classpathFileSource("1agents.json"))
+                .source(SourceFactory.classpathFileSource("agents.json"))
                 .mapper(new JacksonJsonToObjectMapper<>(GlobalConfiguration.class)).optional().lazy().build());
 
         container.add(new ConfigurationBuilder<GlobalConfiguration>().precedence(5)
-                .source(SourceFactory.classpathFileSource("1agents.yaml"))
+                .source(SourceFactory.classpathFileSource("agents.yaml"))
                 .mapper(new JacksonYAMLToObjectMapper<>(GlobalConfiguration.class)).optional().lazy().build());
     }
 
