@@ -9,7 +9,7 @@ import net.obvj.agents.annotation.Run;
  *
  * @author oswaldo.bapvic.jr
  */
-@Agent(type = AgentType.TIMER, interval = "8760h") // 1 year
+@Agent(type = AgentType.TIMER, interval = "8760h", modulate = true) // 1 year
 public class TestTimerAgentThrowingException
 {
     @Run
