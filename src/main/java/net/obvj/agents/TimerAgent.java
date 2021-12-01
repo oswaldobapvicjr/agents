@@ -67,7 +67,7 @@ public abstract class TimerAgent extends AbstractAgent
                 java.util.concurrent.TimeUnit.MILLISECONDS);
     }
 
-    private long getInitialDelay()
+    protected long getInitialDelay()
     {
         if (super.getConfiguration().isModulate())
         {

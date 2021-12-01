@@ -26,7 +26,7 @@ import net.obvj.confectory.source.SourceFactory;
 @Component
 public class GlobalConfigurationHolder
 {
-    private final TypeSafeConfigurationContainer<GlobalConfiguration> container = new TypeSafeConfigurationContainer<>();
+    private final TypeSafeConfigurationContainer<GlobalConfiguration> container;
 
     private Map<String, AgentConfiguration> agentsByClassName;
 
@@ -36,12 +36,19 @@ public class GlobalConfigurationHolder
      */
     public GlobalConfigurationHolder()
     {
-        fillContainer();
+        this(defaultContainer());
+    }
+
+    protected GlobalConfigurationHolder(TypeSafeConfigurationContainer<GlobalConfiguration> container)
+    {
+        this.container = container;
         fillAuxiliaryMap();
     }
 
-    private void fillContainer()
+    private static TypeSafeConfigurationContainer<GlobalConfiguration> defaultContainer()
     {
+        TypeSafeConfigurationContainer<GlobalConfiguration> container = new TypeSafeConfigurationContainer<>();
+
         container.add(new ConfigurationBuilder<GlobalConfiguration>().precedence(3)
                 .source(SourceFactory.classpathFileSource("agents.xml"))
                 .mapper(new JacksonXMLToObjectMapper<>(GlobalConfiguration.class)).optional().lazy().build());
@@ -53,6 +60,8 @@ public class GlobalConfigurationHolder
         container.add(new ConfigurationBuilder<GlobalConfiguration>().precedence(5)
                 .source(SourceFactory.classpathFileSource("agents.yaml"))
                 .mapper(new JacksonYAMLToObjectMapper<>(GlobalConfiguration.class)).optional().lazy().build());
+
+        return container;
     }
 
     private void fillAuxiliaryMap()

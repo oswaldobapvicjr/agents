@@ -49,6 +49,9 @@ class TimerAgentTest
     private static final AgentConfiguration TEST_CRON_AGENT_CONFIG = new AgentConfiguration.Builder().type(CRON)
             .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).build();
 
+    @Mock
+    private AgentConfiguration config;
+
     @Mock(answer = Answers.CALLS_REAL_METHODS)
     private TimerAgent agentMock;
 
@@ -168,6 +171,14 @@ class TimerAgentTest
     {
         TimerAgent agent = (TimerAgent) AgentFactory.create(DUMMY_AGENT_CONFIG);
         assertThat(agent.getInterval(), is(equalTo(TimeInterval.of("30 seconds"))));
+    }
+
+    @Test
+    void getInitialDelay_modulateFalse_zero()
+    {
+        when(agentMock.getConfiguration()).thenReturn(config);
+        when(config.isModulate()).thenReturn(false);
+        assertThat(agentMock.getInitialDelay(), is(equalTo(0L)));
     }
 
 }

@@ -5,4 +5,4 @@ agents:
 - class: net.obvj.agents.test.agents.valid.DummyAgent
   type: timer
   interval: 30 seconds
-  modulate: tru
+  modulate: true
