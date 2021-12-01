@@ -41,10 +41,10 @@ class TimerAgentTest
     private static final String DUMMY_AGENT = "DummyAgent";
 
     private static final AgentConfiguration DUMMY_AGENT_CONFIG = new AgentConfiguration.Builder().type(TIMER)
-            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("30 seconds").build();
+            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("30 seconds").modulate(true).build();
 
     private static final AgentConfiguration DUMMY_AGENT_CONFIG_EVERY_DAY = new AgentConfiguration.Builder().type(TIMER)
-            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("24 hours").build();
+            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("24 hours").modulate(true).build();
 
     private static final AgentConfiguration TEST_CRON_AGENT_CONFIG = new AgentConfiguration.Builder().type(CRON)
             .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).build();
