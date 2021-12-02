@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import net.obvj.agents.conf.AgentConfiguration.Builder;
 
 /**
- * An object containing global configuration data from a particular {@link Source}.
+ * An object containing global configuration data from a particular source.
  *
  * @author oswaldo.bapvic.jr
  * @since 0.2.0
@@ -29,11 +29,11 @@ public class GlobalConfiguration
     }
 
     /**
-     * Returns a list of {@link AgentConfiguration} candidates, as retrieved by the associated
-     * configuration {@link Source}.
+     * Returns a list of {@link AgentConfiguration.Builder} (candidates), as retrieved by the
+     * configuration container.
      *
-     * @return a list of {@link AgentConfiguration} builders, as retrieved by the associated
-     *         configuration {@link Source}
+     * @return a list of {@link AgentConfiguration.Builder} objects
+     * @see AgentConfiguration
      */
     public List<Builder> getAgents()
     {
