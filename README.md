@@ -22,7 +22,7 @@ A Timer agent can be executed periodically, in a fixed run frequency, which must
 ```java
 package com.mycompany.agents;
 ...
-@Agent(type = AgentType.TIMER, interval = "30 seconds")
+@Agent(type = AgentType.TIMER, interval = "30 seconds", modulate = true)
 public class MyTimerAgent {
     @Run
     public void execute() {
@@ -90,7 +90,7 @@ If you are using Maven, add **Agents** as a dependency on your pom.xml file:
 <dependency>
     <groupId>net.obvj</groupId>
     <artifactId>agents</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
