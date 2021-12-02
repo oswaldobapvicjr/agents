@@ -34,15 +34,11 @@ class AgentConfigurationTest
     private static final String CLASS_NAME1 = "className1";
     private static final String INTERVAL1 = "90 seconds";
 
-    private static final AgentConfiguration AGENT_TIMER_DEFAULT = new AgentConfiguration.Builder().type(AgentType.TIMER)
-            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).build();
+    private static final Builder BUILDER_AGENT_TIMER_DEFAULT = new AgentConfiguration.Builder().type(AgentType.TIMER)
+            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1);
 
-    private static final AgentConfiguration AGENT_TIMER_DEFAULT_CLONE = new AgentConfiguration.Builder()
-            .type(AgentType.TIMER)
-            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).build();
-
-    private static final AgentConfiguration AGENT_TIMER_XML = new AgentConfiguration.Builder().type(AgentType.TIMER)
-            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).build();
+    private static final AgentConfiguration AGENT_TIMER_DEFAULT = BUILDER_AGENT_TIMER_DEFAULT.build();
+    private static final AgentConfiguration AGENT_TIMER_DEFAULT_CLONE = BUILDER_AGENT_TIMER_DEFAULT.build();
 
     private static final AgentConfiguration AGENT_CRON_DEFAULT = new AgentConfiguration.Builder().type(AgentType.CRON)
             .className(CLASS_NAME1).build();
@@ -125,6 +121,13 @@ class AgentConfigurationTest
     void toString_allFieldsSet_allFieldsPresent()
     {
         String string = AGENT_TIMER_DEFAULT.toString().replaceAll("\"", "");
+        assertThat(string, containsAll("name:name1", "className:className1", "type:TIMER", "interval:90 seconds"));
+    }
+
+    @Test
+    void toString_onBuilderAllFieldsSet_allFieldsPresent()
+    {
+        String string = BUILDER_AGENT_TIMER_DEFAULT.toString().replaceAll("\"", "");
         assertThat(string, containsAll("name:name1", "className:className1", "type:TIMER", "interval:90 seconds"));
     }
 

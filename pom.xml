@@ -111,21 +111,21 @@
         </dependency>
 
         <dependency>
-          <groupId>net.obvj</groupId>
-          <artifactId>confectory-datamapper-jackson2-json</artifactId>
-          <version>${confectory.version}</version>
+            <groupId>net.obvj</groupId>
+            <artifactId>confectory-datamapper-jackson2-json</artifactId>
+            <version>${confectory.version}</version>
         </dependency>
 
         <dependency>
-          <groupId>net.obvj</groupId>
-          <artifactId>confectory-datamapper-jackson2-xml</artifactId>
-          <version>${confectory.version}</version>
+            <groupId>net.obvj</groupId>
+            <artifactId>confectory-datamapper-jackson2-xml</artifactId>
+            <version>${confectory.version}</version>
         </dependency>
 
         <dependency>
-          <groupId>net.obvj</groupId>
-          <artifactId>confectory-datamapper-jackson2-yaml</artifactId>
-          <version>${confectory.version}</version>
+            <groupId>net.obvj</groupId>
+            <artifactId>confectory-datamapper-jackson2-yaml</artifactId>
+            <version>${confectory.version}</version>
         </dependency>
 
         <!-- Test dependencies -->
