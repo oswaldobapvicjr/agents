@@ -1,14 +1,16 @@
 package net.obvj.agents.conf;
 
 import java.util.List;
-import java.util.Optional;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.obvj.agents.conf.AgentConfiguration.Builder;
 
 /**
- * An object containing global configuration data from a particular {@link Source}.
+ * An object containing global configuration data from a particular source.
  *
  * @author oswaldo.bapvic.jr
  * @since 0.2.0
@@ -17,8 +19,6 @@ public class GlobalConfiguration
 {
     @JsonProperty("agents")
     private List<Builder> agents;
-
-    private Source source;
 
     /**
      * Constructs a new {@link GlobalConfiguration}.
@@ -29,11 +29,11 @@ public class GlobalConfiguration
     }
 
     /**
-     * Returns a list of {@link AgentConfiguration} candidates, as retrieved by the associated
-     * configuration {@link Source}.
+     * Returns a list of {@link AgentConfiguration.Builder} (candidates), as retrieved by the
+     * configuration container.
      *
-     * @return a list of {@link AgentConfiguration} builders, as retrieved by the associated
-     *         configuration {@link Source}
+     * @return a list of {@link AgentConfiguration.Builder} objects
+     * @see AgentConfiguration
      */
     public List<Builder> getAgents()
     {
@@ -49,37 +49,16 @@ public class GlobalConfiguration
     }
 
     /**
-     * Returns the external source associated with this {@link GlobalConfiguration}.
+     * Returns a string representation of this {@link GlobalConfiguration}.
      *
-     * @return the {@link Source} associated with this {@link GlobalConfiguration}.
+     * @return a string representation of this {@link GlobalConfiguration}
      */
-    public Source getSource()
+    @Override
+    public String toString()
     {
-        return source;
-    }
-
-    /**
-     * @param source the source to set
-     */
-    protected void setSource(Source source)
-    {
-        this.source = source;
-    }
-
-    /**
-     * Creates a {@link GlobalConfiguration} object from the specified {@link Source}.
-     * <p>
-     * <strong>NOTE:</strong> this method acts quietly, i.e., in case of exceptions, an empty
-     * object is always returned.
-     *
-     * @param source the {@link Source} which configuration is to be loaded
-     * @return a {@link GlobalConfiguration} object, loaded by the specified {@link Source},
-     *         or {@link Optional#empty()} if the specified source is null, or unable to parse
-     *         the configuration source; never {@code null}
-     */
-    public static Optional<GlobalConfiguration> fromSource(Source source)
-    {
-        return source != null ? source.loadGlobalConfigurationFileQuietly() : Optional.empty();
+        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
+                .append("agents", agents)
+                .build();
     }
 
 }

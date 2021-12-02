@@ -34,15 +34,11 @@ class AgentConfigurationTest
     private static final String CLASS_NAME1 = "className1";
     private static final String INTERVAL1 = "90 seconds";
 
-    private static final AgentConfiguration AGENT_TIMER_DEFAULT = new AgentConfiguration.Builder().type(AgentType.TIMER)
-            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).build();
+    private static final Builder BUILDER_AGENT_TIMER_DEFAULT = new AgentConfiguration.Builder().type(AgentType.TIMER)
+            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1);
 
-    private static final AgentConfiguration AGENT_TIMER_DEFAULT_CLONE = new AgentConfiguration.Builder()
-            .type(AgentType.TIMER)
-            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).build();
-
-    private static final AgentConfiguration AGENT_TIMER_XML = new AgentConfiguration.Builder().type(AgentType.TIMER)
-            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).build(Source.XML);
+    private static final AgentConfiguration AGENT_TIMER_DEFAULT = BUILDER_AGENT_TIMER_DEFAULT.build();
+    private static final AgentConfiguration AGENT_TIMER_DEFAULT_CLONE = BUILDER_AGENT_TIMER_DEFAULT.build();
 
     private static final AgentConfiguration AGENT_CRON_DEFAULT = new AgentConfiguration.Builder().type(AgentType.CRON)
             .className(CLASS_NAME1).build();
@@ -98,54 +94,6 @@ class AgentConfigurationTest
     }
 
     @Test
-    void getHighestPrecedenceConfiguration_twoDifferentSources_highestPrecedence()
-    {
-        // XML has higher precedence
-        assertThat(AgentConfiguration.getHighestPrecedenceConfiguration(AGENT_TIMER_DEFAULT, AGENT_TIMER_XML), is(AGENT_TIMER_XML));
-    }
-
-    @Test
-    void getHighestPrecedenceConfiguration_twoEqualSources_firstObject()
-    {
-        assertThat(AgentConfiguration.getHighestPrecedenceConfiguration(AGENT_TIMER_DEFAULT, AGENT_CRON_DEFAULT),
-                is(AGENT_TIMER_DEFAULT));
-    }
-
-    @Test
-    void getHighestPrecedenceConfiguration_singleObject_sameObject()
-    {
-        assertThat(AgentConfiguration.getHighestPrecedenceConfiguration(AGENT_CRON_DEFAULT), is(AGENT_CRON_DEFAULT));
-    }
-
-    @Test
-    void getHighestPrecedenceConfiguration_noObject_exception()
-    {
-        assertThat(() -> AgentConfiguration.getHighestPrecedenceConfiguration(),
-                throwsException(IllegalArgumentException.class));
-    }
-
-    @Test
-    void getHighestPrecedenceConfiguration_nullObjectAndValidObject_validObject()
-    {
-        assertThat(AgentConfiguration.getHighestPrecedenceConfiguration((AgentConfiguration) null, AGENT_CRON_DEFAULT),
-                is(AGENT_CRON_DEFAULT));
-    }
-
-    @Test
-    void getHighestPrecedenceConfiguration_nullObject_exception()
-    {
-        assertThat(() -> AgentConfiguration.getHighestPrecedenceConfiguration((AgentConfiguration) null),
-                throwsException(IllegalArgumentException.class));
-    }
-
-    @Test
-    void getHighestPrecedenceConfiguration_nullObjects_exception()
-    {
-        assertThat(() -> AgentConfiguration.getHighestPrecedenceConfiguration((AgentConfiguration) null,
-                (AgentConfiguration) null), throwsException(IllegalArgumentException.class));
-    }
-
-    @Test
     void equals_similarObjects_true()
     {
         assertNotSame(AGENT_TIMER_DEFAULT, AGENT_TIMER_DEFAULT_CLONE);
@@ -158,7 +106,6 @@ class AgentConfigurationTest
     @Test
     void equals_notSimilarObjects_false()
     {
-        assertNotEquals(AGENT_TIMER_DEFAULT, AGENT_TIMER_XML);
         assertNotEquals(AGENT_TIMER_DEFAULT, AGENT_CRON_DEFAULT);
         assertNotEquals(AGENT_TIMER_DEFAULT, NAME1);
         assertNotEquals(AGENT_TIMER_DEFAULT, (AgentConfiguration) null);
@@ -168,15 +115,20 @@ class AgentConfigurationTest
     void hashCode_similarObjects_sameHash()
     {
         assertThat(Sets.newHashSet(AGENT_TIMER_DEFAULT, AGENT_TIMER_DEFAULT_CLONE).size(), is(1));
-        assertThat(Sets.newHashSet(AGENT_TIMER_DEFAULT, AGENT_TIMER_DEFAULT_CLONE, AGENT_TIMER_XML).size(), is(2));
     }
 
     @Test
     void toString_allFieldsSet_allFieldsPresent()
     {
         String string = AGENT_TIMER_DEFAULT.toString().replaceAll("\"", "");
-        assertThat(string, containsAll("name:name1", "className:className1", "type:TIMER", "interval:90 seconds",
-                "source:DEFAULT"));
+        assertThat(string, containsAll("name:name1", "className:className1", "type:TIMER", "interval:90 seconds"));
+    }
+
+    @Test
+    void toString_onBuilderAllFieldsSet_allFieldsPresent()
+    {
+        String string = BUILDER_AGENT_TIMER_DEFAULT.toString().replaceAll("\"", "");
+        assertThat(string, containsAll("name:name1", "className:className1", "type:TIMER", "interval:90 seconds"));
     }
 
     @Test

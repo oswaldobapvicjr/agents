@@ -98,7 +98,7 @@ public class AgentManager
      */
     private AgentConfiguration findHighestPrecedenceConfiguration(AgentConfiguration agentConfiguration)
     {
-        return configurationHolder.getHighestPrecedenceAgentConfigurationByClassName(agentConfiguration.getClassName())
+        return configurationHolder.getHighestPrecedenceConfigurationByAgentClassName(agentConfiguration.getClassName())
                 .orElse(agentConfiguration);
     }
 
@@ -130,8 +130,7 @@ public class AgentManager
      */
     private Optional<AbstractAgent> instantiateAgent(AgentConfiguration agentConfiguration)
     {
-        LOG.debug("Instantiating agent {} from {} configuration...", agentConfiguration.getClassName(),
-                agentConfiguration.getSource());
+        LOG.debug("Instantiating agent {}...", agentConfiguration.getClassName());
         try
         {
             return Optional.of(AgentFactory.create(agentConfiguration));
@@ -318,6 +317,7 @@ public class AgentManager
     {
         LOG.info("Starting agents...");
         getAgents().forEach(this::startAgent);
+        LOG.info("All agents started successfully...");
     }
 
     protected void startAgent(AbstractAgent agent)
