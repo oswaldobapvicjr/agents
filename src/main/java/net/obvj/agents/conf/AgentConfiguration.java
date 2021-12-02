@@ -179,6 +179,7 @@ public class AgentConfiguration
 
         Builder builder = new Builder().type(type).name(name).className(className).interval(interval)
                 .modulate(modulate);
+
         return builder.build();
     }
 
