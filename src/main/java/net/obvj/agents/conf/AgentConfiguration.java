@@ -24,6 +24,7 @@ public class AgentConfiguration
     private AgentType type;
     private String className;
     private String interval;
+    private boolean modulate;
 
     protected AgentConfiguration(Builder builder)
     {
@@ -31,6 +32,7 @@ public class AgentConfiguration
         this.type = builder.type;
         this.className = builder.className;
         this.interval = builder.interval;
+        this.modulate = builder.modulate;
     }
 
     public String getName()
@@ -51,6 +53,11 @@ public class AgentConfiguration
     public String getInterval()
     {
         return interval;
+    }
+
+    public boolean isModulate()
+    {
+        return modulate;
     }
 
     /**
@@ -75,6 +82,9 @@ public class AgentConfiguration
         @JsonProperty
         private String interval;
 
+        @JsonProperty
+        private boolean modulate;
+
         public Builder type(AgentType type)
         {
             this.type = type;
@@ -96,6 +106,12 @@ public class AgentConfiguration
         public Builder interval(String interval)
         {
             this.interval = interval;
+            return this;
+        }
+
+        public Builder modulate(boolean modulate)
+        {
+            this.modulate = modulate;
             return this;
         }
 
@@ -131,6 +147,7 @@ public class AgentConfiguration
                     .append("className", className)
                     .append("type", type)
                     .append("interval", interval)
+                    .append("modulate", modulate)
                     .toString();
         }
 
@@ -158,8 +175,11 @@ public class AgentConfiguration
         AgentType type = annotation.type();
         String className = agentClass.getCanonicalName();
         String interval = annotation.interval();
+        boolean modulate = annotation.modulate();
 
-        Builder builder = new Builder().type(type).name(name).className(className).interval(interval);
+        Builder builder = new Builder().type(type).name(name).className(className).interval(interval)
+                .modulate(modulate);
+
         return builder.build();
     }
 
@@ -176,13 +196,14 @@ public class AgentConfiguration
                 .append("className", className)
                 .append("type", type)
                 .append("interval", interval)
+                .append("modulate", modulate)
                 .build();
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(name, className, interval, type);
+        return Objects.hash(name, className, interval, type, modulate);
     }
 
     @Override
@@ -202,7 +223,7 @@ public class AgentConfiguration
         }
         AgentConfiguration other = (AgentConfiguration) object;
         return Objects.equals(className, other.className) && Objects.equals(interval, other.interval)
-                && Objects.equals(name, other.name) && type == other.type;
+                && Objects.equals(name, other.name) && type == other.type && modulate == other.modulate;
     }
 
 }

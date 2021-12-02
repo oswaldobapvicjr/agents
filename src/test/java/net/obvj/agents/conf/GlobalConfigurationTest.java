@@ -25,10 +25,10 @@ class GlobalConfigurationTest
     private static final String INTERVAL2 = "interval2";
 
     private static final Builder BUILDER_AGENT_1 = new AgentConfiguration.Builder().type(AgentType.TIMER)
-            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1);
+            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).modulate(true);
 
     private static final Builder BUILDER_AGENT_2 = new AgentConfiguration.Builder().type(AgentType.CRON)
-            .className(CLASS_NAME2).name(NAME2).interval(INTERVAL2);
+            .className(CLASS_NAME2).name(NAME2).interval(INTERVAL2).modulate(false);
 
     private GlobalConfiguration configuration = new GlobalConfiguration();
 
@@ -39,8 +39,9 @@ class GlobalConfigurationTest
 
         String string = configuration.toString().replaceAll("\"", "");
         System.out.println(string);
-        assertThat(string, containsAll("agents:[", "{name:name1,className:className1,type:TIMER,interval:interval1}",
-                "{name:name2,className:className2,type:CRON,interval:interval2}"));
+        assertThat(string,
+                containsAll("agents:[", "{name:name1,className:className1,type:TIMER,interval:interval1,modulate:true}",
+                        "{name:name2,className:className2,type:CRON,interval:interval2,modulate:false}"));
     }
 
 }
