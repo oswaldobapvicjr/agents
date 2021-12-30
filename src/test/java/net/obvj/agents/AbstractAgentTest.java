@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.obvj.agents.AbstractAgent.State;
+import net.obvj.performetrics.util.Duration;
 
 /**
  * Unit tests for the {@link AbstractAgent} class.
@@ -149,6 +151,18 @@ class AbstractAgentTest
         agent.lastRun = null;
         Calendar lastRunDate = agent.getLastRunDate();
         assertNull(lastRunDate);
+    }
+
+    @Test
+    void formatDuration_null_null()
+    {
+        assertThat(AbstractAgent.formatDuration(null), is("null"));
+    }
+
+    @Test
+    void formatDuration_valid_short()
+    {
+        assertThat(AbstractAgent.formatDuration(Duration.of(50, TimeUnit.SECONDS)), is("50 second(s)"));
     }
 
 }

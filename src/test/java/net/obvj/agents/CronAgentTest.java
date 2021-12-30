@@ -82,8 +82,7 @@ class CronAgentTest
     private static final CronAgent AGENT_HOURLY_ON_WEEKEND = spy((CronAgent) AgentFactory.create(AGENT_CFG_HOURLY_ON_WEEKEND));
 
     private static final AgentConfiguration DUMMY_AGENT_CONFIG = new AgentConfiguration.Builder().type(CRON)
-            .name(AGENT_NAME)
-            .className(AGENT_CRON_CLASS_NAME).interval("0 0 * * 0").build();
+            .name(AGENT_NAME).className(AGENT_CRON_CLASS_NAME).interval("0 0 * * 0").enableStats(true).build();
 
     private static final AgentConfiguration TEST_TIMER_AGENT_CONFIG = new AgentConfiguration.Builder().type(TIMER)
             .name(AGENT_NAME).className(AGENT_CRON_CLASS_NAME).build();

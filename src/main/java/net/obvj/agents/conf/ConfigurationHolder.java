@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
 
 import net.obvj.confectory.ConfigurationBuilder;
@@ -40,55 +41,61 @@ import net.obvj.confectory.source.SourceFactory;
  * @since 0.2.0
  */
 @Component
-public class GlobalConfigurationHolder
+public class ConfigurationHolder
 {
-    private final TypeSafeConfigurationContainer<GlobalConfiguration> container;
+    private final TypeSafeConfigurationContainer<Configuration> container;
 
     private Map<String, AgentConfiguration> agentsByClassName;
 
+    private GlobalConfiguration globalConfiguration;
+
     /**
-     * Builds a {@link GlobalConfigurationHolder}, loaded with configuration data mapped from
+     * Builds a {@link ConfigurationHolder}, loaded with configuration data mapped from
      * all of the supported configuration sources.
      */
-    public GlobalConfigurationHolder()
+    public ConfigurationHolder()
     {
         this(defaultContainer());
     }
 
-    protected GlobalConfigurationHolder(TypeSafeConfigurationContainer<GlobalConfiguration> container)
+    protected ConfigurationHolder(TypeSafeConfigurationContainer<Configuration> container)
     {
         this.container = container;
-        fillAuxiliaryMap();
+        fillAuxiliaryObjects();
     }
 
-    private static TypeSafeConfigurationContainer<GlobalConfiguration> defaultContainer()
+    private static TypeSafeConfigurationContainer<Configuration> defaultContainer()
     {
-        TypeSafeConfigurationContainer<GlobalConfiguration> container = new TypeSafeConfigurationContainer<>();
+        TypeSafeConfigurationContainer<Configuration> container = new TypeSafeConfigurationContainer<>();
 
-        container.add(new ConfigurationBuilder<GlobalConfiguration>().precedence(3)
+        container.add(new ConfigurationBuilder<Configuration>().precedence(3)
                 .source(SourceFactory.classpathFileSource("agents.xml"))
-                .mapper(new JacksonXMLToObjectMapper<>(GlobalConfiguration.class)).optional().lazy().build());
+                .mapper(new JacksonXMLToObjectMapper<>(Configuration.class)).optional().lazy().build());
 
-        container.add(new ConfigurationBuilder<GlobalConfiguration>().precedence(4)
+        container.add(new ConfigurationBuilder<Configuration>().precedence(4)
                 .source(SourceFactory.classpathFileSource("agents.json"))
-                .mapper(new JacksonJsonToObjectMapper<>(GlobalConfiguration.class)).optional().lazy().build());
+                .mapper(new JacksonJsonToObjectMapper<>(Configuration.class)).optional().lazy().build());
 
-        container.add(new ConfigurationBuilder<GlobalConfiguration>().precedence(5)
+        container.add(new ConfigurationBuilder<Configuration>().precedence(5)
                 .source(SourceFactory.classpathFileSource("agents.yaml"))
-                .mapper(new JacksonYAMLToObjectMapper<>(GlobalConfiguration.class)).optional().lazy().build());
+                .mapper(new JacksonYAMLToObjectMapper<>(Configuration.class)).optional().lazy().build());
 
         return container;
     }
 
-    private void fillAuxiliaryMap()
+    private void fillAuxiliaryObjects()
     {
-        GlobalConfiguration config = container.getBean();
+        Configuration config = container.getBean();
+
         agentsByClassName = getAgentConfigurationBuilders(config).stream()
                 .map(AgentConfiguration.Builder::build)
                 .collect(Collectors.toMap(AgentConfiguration::getClassName, Function.identity()));
+
+        globalConfiguration = ObjectUtils.defaultIfNull(config.getGlobalConfiguration(),
+                new GlobalConfiguration());
     }
 
-    private List<AgentConfiguration.Builder> getAgentConfigurationBuilders(GlobalConfiguration globalConfiguration)
+    private List<AgentConfiguration.Builder> getAgentConfigurationBuilders(Configuration globalConfiguration)
     {
         return globalConfiguration != null ? globalConfiguration.getAgents() : Collections.emptyList();
     }
@@ -105,6 +112,15 @@ public class GlobalConfigurationHolder
     public Optional<AgentConfiguration> getHighestPrecedenceConfigurationByAgentClassName(String className)
     {
         return Optional.ofNullable(agentsByClassName.get(className));
+    }
+
+    /**
+     * @return the {@link GlobalConfiguration}
+     * @since 0.3.0
+     */
+    public GlobalConfiguration getGlobalConfiguration()
+    {
+        return globalConfiguration;
     }
 
 }

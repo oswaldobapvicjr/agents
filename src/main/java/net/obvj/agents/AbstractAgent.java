@@ -18,14 +18,21 @@ package net.obvj.agents;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.Queue;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.EvictingQueue;
 
 import net.obvj.agents.conf.AgentConfiguration;
+import net.obvj.agents.conf.ConfigurationHolder;
+import net.obvj.agents.conf.GlobalConfiguration;
+import net.obvj.agents.util.ApplicationContextFacade;
 import net.obvj.agents.util.DateUtils;
 import net.obvj.performetrics.Counter;
 import net.obvj.performetrics.Stopwatch;
@@ -51,9 +58,7 @@ public abstract class AbstractAgent implements Runnable
     protected static final String MSG_AGENT_ALREADY_STOPPED = "Agent already stopped";
     protected static final String MSG_AGENT_ALREADY_RUNNING = "Agent task already in execution";
 
-    private static final int EXECUTION_DURATION_HISTORY_SIZE = 1440;
-
-    private final AgentConfiguration configuration;
+    final AgentConfiguration configuration;
 
     private State previousState;
     private State currentState;
@@ -71,9 +76,9 @@ public abstract class AbstractAgent implements Runnable
     protected Duration lastRunDuration;
 
     /**
-     * A history of most recent execution durations, in seconds.
+     * A history of most recent execution durations.
      */
-    private Queue<Duration> executionDurationHistory = EvictingQueue.create(EXECUTION_DURATION_HISTORY_SIZE);
+    private Queue<Duration> executionDurationHistory;
 
     /*
      * This object is used to control access to the task execution independently of other
@@ -87,6 +92,7 @@ public abstract class AbstractAgent implements Runnable
     protected AbstractAgent(AgentConfiguration configuration)
     {
         this.configuration = configuration;
+        executionDurationHistory = newQueue();
     }
 
     /**
@@ -255,7 +261,7 @@ public abstract class AbstractAgent implements Runnable
                 {
                     Stopwatch stopwatch = Stopwatch.createStarted(Counter.Type.WALL_CLOCK_TIME);
                     runTask();
-                    updateStatistics(stopwatch.elapsedTime(Counter.Type.WALL_CLOCK_TIME));
+                    updateStatistics(stopwatch.elapsedTime());
                     LOG.debug("Agent finished in {}", lastRunDuration);
                     afterRun();
                 }
@@ -274,7 +280,10 @@ public abstract class AbstractAgent implements Runnable
     private void updateStatistics(Duration duration)
     {
         this.lastRunDuration = duration;
-        executionDurationHistory.offer(lastRunDuration);
+        if (configuration.isEnableStats())
+        {
+            executionDurationHistory.offer(lastRunDuration);
+        }
     }
 
     /**
@@ -285,8 +294,12 @@ public abstract class AbstractAgent implements Runnable
      */
     protected String formatAverageRunDuration()
     {
-        Duration average = getAverageRunDuration();
-        return average != null ? average.toString() : "null";
+        if (configuration.isEnableStats())
+        {
+            Duration average = getAverageRunDuration();
+            return formatDuration(average);
+        }
+        return "not enabled";
     }
 
     public Duration getAverageRunDuration()
@@ -301,7 +314,16 @@ public abstract class AbstractAgent implements Runnable
      */
     protected String formatLastRunDuration()
     {
-        return lastRunDuration != null ? lastRunDuration.toString(DurationFormat.SHORT) : "null";
+        return formatDuration(lastRunDuration);
+    }
+
+    /**
+     * @param duration the {@link Duration} to be formatted
+     * @return the formatted duration, or {@code "null"}
+     */
+    static String formatDuration(Duration duration)
+    {
+        return duration != null ? duration.toString(DurationFormat.SHORTER) : "null";
     }
 
     /**
@@ -324,5 +346,37 @@ public abstract class AbstractAgent implements Runnable
     }
 
     public abstract String getStatusString();
+
+    protected ToStringBuilder getPresetStatusStringBuilder()
+    {
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.JSON_STYLE);
+        builder.append("name", getName())
+               .append("type", getType())
+               .append("status", getState())
+               .append("startDate", (DateUtils.formatDate(startDate)))
+               .append("lastExecutionStartDate", (DateUtils.formatDate(lastRun)))
+               .append("lastExecutionDuration", formatLastRunDuration())
+               .append("averageExecutionDuration", formatAverageRunDuration());
+        return builder;
+    }
+
+    /**
+     * @return the configured maximum number of durations in the history for statistics
+     */
+    private int getMaxHistorySize()
+    {
+        int maxAgentHistorySize = getGlobalConfiguration().getMaxAgentHistorySize();
+        return NumberUtils.max(maxAgentHistorySize, 0); // never a negative number
+    }
+
+    private GlobalConfiguration getGlobalConfiguration()
+    {
+        return ApplicationContextFacade.getBean(ConfigurationHolder.class).getGlobalConfiguration();
+    }
+
+    private Queue<Duration> newQueue()
+    {
+        return configuration.isEnableStats() ? EvictingQueue.create(getMaxHistorySize()) : new LinkedList<>();
+    }
 
 }

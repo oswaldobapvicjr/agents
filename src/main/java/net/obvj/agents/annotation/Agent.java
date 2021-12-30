@@ -81,4 +81,13 @@ public @interface Agent
      */
     boolean modulate() default false;
 
+    /**
+     * Indicates whether or not the system will process and store statistical data (e.g.:
+     * average execution duration) for this agent.
+     *
+     * @return a flag determining whether or not statistics are enabled for this agent
+     * @since 0.3.0
+     */
+    boolean enableStats() default false;
+
 }

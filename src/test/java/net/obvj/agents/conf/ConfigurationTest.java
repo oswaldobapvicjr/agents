@@ -11,11 +11,11 @@ import net.obvj.agents.AgentType;
 import net.obvj.agents.conf.AgentConfiguration.Builder;
 
 /**
- * Unit tests for the {@link GlobalConfiguration}.
+ * Unit tests for the {@link Configuration}.
  *
  * @author oswaldo.bapvic.jr
  */
-class GlobalConfigurationTest
+class ConfigurationTest
 {
     private static final String NAME1 = "name1";
     private static final String NAME2 = "name2";
@@ -25,12 +25,12 @@ class GlobalConfigurationTest
     private static final String INTERVAL2 = "interval2";
 
     private static final Builder BUILDER_AGENT_1 = new AgentConfiguration.Builder().type(AgentType.TIMER)
-            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).modulate(true);
+            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).modulate(true).enableStats(true);
 
     private static final Builder BUILDER_AGENT_2 = new AgentConfiguration.Builder().type(AgentType.CRON)
-            .className(CLASS_NAME2).name(NAME2).interval(INTERVAL2).modulate(false);
+            .className(CLASS_NAME2).name(NAME2).interval(INTERVAL2).modulate(false).enableStats(false);
 
-    private GlobalConfiguration configuration = new GlobalConfiguration();
+    private Configuration configuration = new Configuration();
 
     @Test
     void toString_allFieldsSet_allFieldsPresent()
@@ -40,8 +40,9 @@ class GlobalConfigurationTest
         String string = configuration.toString().replaceAll("\"", "");
         System.out.println(string);
         assertThat(string,
-                containsAll("agents:[", "{name:name1,className:className1,type:TIMER,interval:interval1,modulate:true}",
-                        "{name:name2,className:className2,type:CRON,interval:interval2,modulate:false}"));
+                containsAll("agents:[",
+                        "{name:name1,className:className1,type:TIMER,interval:interval1,modulate:true,enableStats:true",
+                        "{name:name2,className:className2,type:CRON,interval:interval2,modulate:false,enableStats:false"));
     }
 
 }
