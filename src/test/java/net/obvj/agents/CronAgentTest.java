@@ -82,8 +82,7 @@ class CronAgentTest
     private static final CronAgent AGENT_HOURLY_ON_WEEKEND = spy((CronAgent) AgentFactory.create(AGENT_CFG_HOURLY_ON_WEEKEND));
 
     private static final AgentConfiguration DUMMY_AGENT_CONFIG = new AgentConfiguration.Builder().type(CRON)
-            .name(AGENT_NAME)
-            .className(AGENT_CRON_CLASS_NAME).interval("0 0 * * 0").build();
+            .name(AGENT_NAME).className(AGENT_CRON_CLASS_NAME).interval("0 0 * * 0").build();
 
     private static final AgentConfiguration TEST_TIMER_AGENT_CONFIG = new AgentConfiguration.Builder().type(TIMER)
             .name(AGENT_NAME).className(AGENT_CRON_CLASS_NAME).build();
@@ -251,7 +250,7 @@ class CronAgentTest
         assertThat(statusWithoutQuotes,
                 containsAll("name:Agent1", "type:CRON", "status:SET", "startDate:null", "lastExecutionStartDate:null",
                         "cronExpression:0 0 * * 0", "cronDescription", "nextExecutionDate",
-                        "lastExecutionDuration:null", "averageExecutionDuration:0 second(s)"));
+                        "lastExecutionDuration:null", "averageExecutionDuration:not enabled"));
     }
 
     @Test

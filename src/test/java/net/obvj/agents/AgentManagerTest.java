@@ -24,7 +24,7 @@ import com.google.common.collect.Sets;
 
 import net.obvj.agents.AbstractAgent.State;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.conf.GlobalConfigurationHolder;
+import net.obvj.agents.conf.ConfigurationHolder;
 import net.obvj.agents.test.agents.invalid.TestAgentWithAllCustomParamsAndConstructorThrowsException;
 import net.obvj.agents.test.agents.valid.DummyAgent;
 import net.obvj.agents.util.AnnotatedAgentScanner;
@@ -57,7 +57,7 @@ class AgentManagerTest
     private AbstractAgent dummyAgent;
 
     @Mock
-    private GlobalConfigurationHolder globalConfigurationHolder;
+    private ConfigurationHolder globalConfigurationHolder;
 
     @InjectMocks
     private AgentManager manager;

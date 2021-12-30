@@ -25,7 +25,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -159,14 +158,10 @@ public abstract class CronAgent extends AbstractAgent
     @Override
     public String getStatusString()
     {
-        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.JSON_STYLE);
-        builder.append("name", getName()).append("type", getType()).append("status", getState())
-                .append("startDate", (DateUtils.formatDate(startDate)))
-                .append("lastExecutionStartDate", (DateUtils.formatDate(lastRun)))
-                .append("lastExecutionDuration", formatLastRunDuration())
-                .append("averageExecutionDuration", formatAverageRunDuration())
-                .append("cronExpression", cronExpression).append("cronDescription", cronDescription)
-                .append("nextExecutionDate", DateUtils.formatDate(nextExecutionDate));
+        ToStringBuilder builder = getPresetStatusStringBuilder();
+        builder.append("cronExpression", cronExpression)
+               .append("cronDescription", cronDescription)
+               .append("nextExecutionDate", DateUtils.formatDate(nextExecutionDate));
         return builder.build();
     }
 

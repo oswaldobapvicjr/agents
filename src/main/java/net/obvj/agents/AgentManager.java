@@ -34,7 +34,7 @@ import com.google.gson.JsonObject;
 
 import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.conf.AgentConfiguration;
-import net.obvj.agents.conf.GlobalConfigurationHolder;
+import net.obvj.agents.conf.ConfigurationHolder;
 import net.obvj.agents.util.AgentFactory;
 import net.obvj.agents.util.AnnotatedAgentScanner;
 import net.obvj.agents.util.ApplicationContextFacade;
@@ -57,9 +57,9 @@ public class AgentManager
     private Map<String, AbstractAgent> agentsByName = new TreeMap<>();
     private Map<String, AgentConfiguration> agentsByClass = new TreeMap<>();
 
-    private GlobalConfigurationHolder configurationHolder;
+    private ConfigurationHolder configurationHolder;
 
-    protected AgentManager(@Autowired GlobalConfigurationHolder holder)
+    protected AgentManager(@Autowired ConfigurationHolder holder)
     {
         configurationHolder = holder;
     }

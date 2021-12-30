@@ -16,64 +16,38 @@
 
 package net.obvj.agents.conf;
 
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import net.obvj.agents.conf.AgentConfiguration.Builder;
-
 /**
- * An object containing global configuration data from a particular source.
+ * An object that parses and stores global configuration data.
  *
  * @author oswaldo.bapvic.jr
- * @since 0.2.0
+ * @since 0.3.0
  */
 public class GlobalConfiguration
 {
-    @JsonProperty("agents")
-    private List<Builder> agents;
+
+    private int maxAgentHistorySize;
 
     /**
-     * Constructs a new {@link GlobalConfiguration}.
+     * @return the maxAgentHistorySize
      */
-    public GlobalConfiguration()
+    public int getMaxAgentHistorySize()
     {
-        // Empty constructor to allow for file deserialization
+        return maxAgentHistorySize;
     }
 
     /**
-     * Returns a list of {@link AgentConfiguration.Builder} (candidates), as retrieved by the
-     * configuration container.
+     * Generates a string representation of this {@link GlobalConfiguration}.
      *
-     * @return a list of {@link AgentConfiguration.Builder} objects
-     * @see AgentConfiguration
-     */
-    public List<Builder> getAgents()
-    {
-        return agents;
-    }
-
-    /**
-     * @param agents the agents to set
-     */
-    protected void setAgents(List<Builder> agents)
-    {
-        this.agents = agents;
-    }
-
-    /**
-     * Returns a string representation of this {@link GlobalConfiguration}.
-     *
-     * @return a string representation of this {@link GlobalConfiguration}
+     * @return a string representation of the object
      */
     @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
-                .append("agents", agents)
+                .append("maxAgentHistorySize", maxAgentHistorySize)
                 .build();
     }
 

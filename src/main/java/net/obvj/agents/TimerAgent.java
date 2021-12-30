@@ -22,7 +22,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,13 +130,9 @@ public abstract class TimerAgent extends AbstractAgent
     @Override
     public String getStatusString()
     {
-        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.JSON_STYLE);
-        builder.append("name", getName()).append("type", getType()).append("status", getState())
-                .append("startDate", (DateUtils.formatDate(startDate)))
-                .append("lastExecutionStartDate", (DateUtils.formatDate(lastRun)))
-                .append("lastExecutionDuration", formatLastRunDuration())
-                .append("averageExecutionDuration", formatAverageRunDuration())
-                .append("interval", interval);
+        ToStringBuilder builder = getPresetStatusStringBuilder();
+        builder.append("interval", interval)
+               .append("modulate", configuration.isModulate());
         return builder.build();
     }
 
