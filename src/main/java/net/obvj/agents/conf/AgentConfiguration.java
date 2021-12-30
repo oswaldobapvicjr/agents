@@ -41,7 +41,7 @@ public class AgentConfiguration
     private String className;
     private String interval;
     private boolean modulate;
-    private boolean enableStats;
+    private boolean enableStatistics;
 
     protected AgentConfiguration(Builder builder)
     {
@@ -50,7 +50,7 @@ public class AgentConfiguration
         this.className = builder.className;
         this.interval = builder.interval;
         this.modulate = builder.modulate;
-        this.enableStats = builder.enableStats;
+        this.enableStatistics = builder.enableStatistics;
     }
 
     public String getName()
@@ -78,9 +78,9 @@ public class AgentConfiguration
         return modulate;
     }
 
-    public boolean isEnableStats()
+    public boolean isEnableStatistics()
     {
-        return enableStats;
+        return enableStatistics;
     }
 
     /**
@@ -109,7 +109,7 @@ public class AgentConfiguration
         private boolean modulate;
 
         @JsonProperty
-        public boolean enableStats;
+        public boolean enableStatistics;
 
         public Builder type(AgentType type)
         {
@@ -141,9 +141,9 @@ public class AgentConfiguration
             return this;
         }
 
-        public Builder enableStats(boolean enableStats)
+        public Builder enableStatistics(boolean enableStatistics)
         {
-            this.enableStats = enableStats;
+            this.enableStatistics = enableStatistics;
             return this;
         }
 
@@ -180,7 +180,7 @@ public class AgentConfiguration
                     .append("type", type)
                     .append("interval", interval)
                     .append("modulate", modulate)
-                    .append("enableStats", enableStats)
+                    .append("enableStatistics", enableStatistics)
                     .toString();
         }
 
@@ -209,10 +209,10 @@ public class AgentConfiguration
         String className = agentClass.getCanonicalName();
         String interval = annotation.interval();
         boolean modulate = annotation.modulate();
-        boolean enableStats = annotation.enableStats();
+        boolean enableStatistics = annotation.enableStatistics();
 
         Builder builder = new Builder().type(type).name(name).className(className).interval(interval)
-                .modulate(modulate).enableStats(enableStats);
+                .modulate(modulate).enableStatistics(enableStatistics);
 
         return builder.build();
     }
@@ -231,14 +231,14 @@ public class AgentConfiguration
                 .append("type", type)
                 .append("interval", interval)
                 .append("modulate", modulate)
-                .append("enableStats", enableStats)
+                .append("enableStatistics", enableStatistics)
                 .build();
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(name, className, interval, type, modulate, enableStats);
+        return Objects.hash(name, className, interval, type, modulate, enableStatistics);
     }
 
     @Override
@@ -259,7 +259,7 @@ public class AgentConfiguration
         AgentConfiguration other = (AgentConfiguration) object;
         return Objects.equals(className, other.className) && Objects.equals(interval, other.interval)
                 && Objects.equals(name, other.name) && type == other.type && modulate == other.modulate
-                && enableStats == other.enableStats;
+                && enableStatistics == other.enableStatistics;
     }
 
 }

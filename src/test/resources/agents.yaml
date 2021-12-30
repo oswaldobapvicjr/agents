@@ -2,11 +2,11 @@ agents:
 - class: net.obvj.agents.test.agents.valid.TestTimerAgentThrowingException
   type: cron
   interval: 0 0 31 12 *
-  enableStats: true
+  enableStatistics: true
 - class: net.obvj.agents.test.agents.valid.DummyAgent
   type: timer
   interval: 30 seconds
   modulate: true
-  enableStats: true
+  enableStatistics: true
 global:
   maxAgentHistorySize: 1440

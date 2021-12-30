@@ -41,19 +41,19 @@ class TimerAgentTest
     private static final String DUMMY_AGENT = "DummyAgent";
 
     private static final AgentConfiguration DUMMY_AGENT_CONFIG = new AgentConfiguration.Builder().type(TIMER)
-            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("30 seconds").modulate(true).enableStats(true)
+            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("30 seconds").modulate(true).enableStatistics(true)
             .build();
 
     private static final AgentConfiguration DUMMY_AGENT_CONFIG_DISABLE_STATS = new AgentConfiguration.Builder()
             .type(TIMER).name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("30 seconds").modulate(true)
-            .enableStats(false).build();
+            .enableStatistics(false).build();
 
     private static final AgentConfiguration DUMMY_AGENT_CONFIG_EVERY_DAY = new AgentConfiguration.Builder().type(TIMER)
-            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("24 hours").modulate(true).enableStats(true)
+            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).interval("24 hours").modulate(true).enableStatistics(true)
             .build();
 
     private static final AgentConfiguration TEST_CRON_AGENT_CONFIG = new AgentConfiguration.Builder().type(CRON)
-            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).enableStats(true).build();
+            .name(DUMMY_AGENT).className(AGENT_CLASS_NAME).enableStatistics(true).build();
 
     @Mock
     private AgentConfiguration config;
@@ -180,7 +180,7 @@ class TimerAgentTest
         assertThat(statusWithoutQuotes,
                 containsAll("name:DummyAgent", "type:TIMER", "status:SET", "startDate:null",
                         "lastExecutionStartDate:null", "interval:30 second(s)", "lastExecutionDuration:null",
-                        "averageExecutionDuration:0.000000000 second(s)"));
+                        "averageExecutionDuration:0 second(s)"));
     }
 
     @Test

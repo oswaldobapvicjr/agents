@@ -88,6 +88,6 @@ public @interface Agent
      * @return a flag determining whether or not statistics are enabled for this agent
      * @since 0.3.0
      */
-    boolean enableStats() default false;
+    boolean enableStatistics() default false;
 
 }

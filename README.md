@@ -54,7 +54,7 @@ For example, the following agent is configured to execute every weekday at 2:00 
 ```java
 package com.mycompany.agents;
 ...
-@Agent(type = AgentType.CRON, frequency = "0 2 * * MON-FRI")
+@Agent(type = AgentType.CRON, interval = "0 2 * * MON-FRI")
 public class MyCronAgent {
     @Run
     public void execute() {

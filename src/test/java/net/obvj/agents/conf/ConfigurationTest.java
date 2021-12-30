@@ -25,10 +25,10 @@ class ConfigurationTest
     private static final String INTERVAL2 = "interval2";
 
     private static final Builder BUILDER_AGENT_1 = new AgentConfiguration.Builder().type(AgentType.TIMER)
-            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).modulate(true).enableStats(true);
+            .className(CLASS_NAME1).name(NAME1).interval(INTERVAL1).modulate(true).enableStatistics(true);
 
     private static final Builder BUILDER_AGENT_2 = new AgentConfiguration.Builder().type(AgentType.CRON)
-            .className(CLASS_NAME2).name(NAME2).interval(INTERVAL2).modulate(false).enableStats(false);
+            .className(CLASS_NAME2).name(NAME2).interval(INTERVAL2).modulate(false).enableStatistics(false);
 
     private Configuration configuration = new Configuration();
 
@@ -41,8 +41,8 @@ class ConfigurationTest
         System.out.println(string);
         assertThat(string,
                 containsAll("agents:[",
-                        "{name:name1,className:className1,type:TIMER,interval:interval1,modulate:true,enableStats:true",
-                        "{name:name2,className:className2,type:CRON,interval:interval2,modulate:false,enableStats:false"));
+                        "{name:name1,className:className1,type:TIMER,interval:interval1,modulate:true,enableStatistics:true",
+                        "{name:name2,className:className2,type:CRON,interval:interval2,modulate:false,enableStatistics:false"));
     }
 
 }

@@ -279,7 +279,7 @@ public abstract class AbstractAgent implements Runnable
     private void updateStatistics(Duration duration)
     {
         this.lastRunDuration = duration;
-        if (configuration.isEnableStats())
+        if (configuration.isEnableStatistics())
         {
             executionDurationHistory.offer(lastRunDuration);
         }
@@ -293,7 +293,7 @@ public abstract class AbstractAgent implements Runnable
      */
     protected String formatAverageRunDuration()
     {
-        if (configuration.isEnableStats())
+        if (configuration.isEnableStatistics())
         {
             Duration average = getAverageRunDuration();
             return formatDuration(average);
@@ -322,7 +322,7 @@ public abstract class AbstractAgent implements Runnable
      */
     static String formatDuration(Duration duration)
     {
-        return duration != null ? duration.toString(DurationFormat.SHORT) : "null";
+        return duration != null ? duration.toString(DurationFormat.SHORTER) : "null";
     }
 
     /**
@@ -366,7 +366,7 @@ public abstract class AbstractAgent implements Runnable
      */
     private int getMaxHistorySize()
     {
-        if (configuration.isEnableStats())
+        if (configuration.isEnableStatistics())
         {
             int maxAgentHistorySize = getGlobalConfiguration().getMaxAgentHistorySize();
             return NumberUtils.max(maxAgentHistorySize, 0); // never a negative number
