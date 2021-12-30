@@ -162,7 +162,7 @@ class AbstractAgentTest
     @Test
     void formatDuration_valid_short()
     {
-        assertThat(AbstractAgent.formatDuration(Duration.of(50, TimeUnit.SECONDS)), is("50 second(s)"));
+        assertThat(AbstractAgent.formatDuration(Duration.of(50, TimeUnit.SECONDS)), is("50.000000000 second(s)"));
     }
 
 }

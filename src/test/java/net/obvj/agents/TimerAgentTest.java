@@ -180,7 +180,7 @@ class TimerAgentTest
         assertThat(statusWithoutQuotes,
                 containsAll("name:DummyAgent", "type:TIMER", "status:SET", "startDate:null",
                         "lastExecutionStartDate:null", "interval:30 second(s)", "lastExecutionDuration:null",
-                        "averageExecutionDuration:0 second(s)"));
+                        "averageExecutionDuration:0.000000000 second(s)"));
     }
 
     @Test
