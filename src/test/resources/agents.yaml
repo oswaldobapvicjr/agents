@@ -7,6 +7,6 @@ agents:
   type: timer
   interval: 30 seconds
   modulate: true
-  enableStats: false
+  enableStats: true
 global:
   maxAgentHistorySize: 1440

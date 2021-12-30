@@ -18,7 +18,6 @@ package net.obvj.agents;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.Queue;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -78,7 +77,7 @@ public abstract class AbstractAgent implements Runnable
     /**
      * A history of most recent execution durations.
      */
-    private Queue<Duration> executionDurationHistory;
+    private final Queue<Duration> executionDurationHistory;
 
     /*
      * This object is used to control access to the task execution independently of other
@@ -92,7 +91,7 @@ public abstract class AbstractAgent implements Runnable
     protected AbstractAgent(AgentConfiguration configuration)
     {
         this.configuration = configuration;
-        executionDurationHistory = newQueue();
+        this.executionDurationHistory = EvictingQueue.create(getMaxHistorySize());
     }
 
     /**
@@ -323,7 +322,7 @@ public abstract class AbstractAgent implements Runnable
      */
     static String formatDuration(Duration duration)
     {
-        return duration != null ? duration.toString(DurationFormat.SHORTER) : "null";
+        return duration != null ? duration.toString(DurationFormat.SHORT) : "null";
     }
 
     /**
@@ -361,22 +360,23 @@ public abstract class AbstractAgent implements Runnable
     }
 
     /**
-     * @return the configured maximum number of durations in the history for statistics
+     * @return the configured maximum number of durations in the history for statistics, or
+     *         zero if statistics not enabled for this agent
+     * @since 0.3.0
      */
     private int getMaxHistorySize()
     {
-        int maxAgentHistorySize = getGlobalConfiguration().getMaxAgentHistorySize();
-        return NumberUtils.max(maxAgentHistorySize, 0); // never a negative number
+        if (configuration.isEnableStats())
+        {
+            int maxAgentHistorySize = getGlobalConfiguration().getMaxAgentHistorySize();
+            return NumberUtils.max(maxAgentHistorySize, 0); // never a negative number
+        }
+        return 0;
     }
 
     private GlobalConfiguration getGlobalConfiguration()
     {
         return ApplicationContextFacade.getBean(ConfigurationHolder.class).getGlobalConfiguration();
-    }
-
-    private Queue<Duration> newQueue()
-    {
-        return configuration.isEnableStats() ? EvictingQueue.create(getMaxHistorySize()) : new LinkedList<>();
     }
 
 }
