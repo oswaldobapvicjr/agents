@@ -1,5 +1,6 @@
 # agents
 
+[![Known Vulnerabilities](https://snyk.io/test/github/oswaldobapvicjr/agents/badge.svg)](https://snyk.io/test/github/oswaldobapvicjr/agents)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/oswaldobapvicjr/agents/Java%20CI%20with%20Maven)](https://github.com/oswaldobapvicjr/agents/actions/workflows/maven.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/oswaldobapvicjr/agents)](https://codecov.io/gh/oswaldobapvicjr/agents)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.obvj/agents/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.obvj/agents)
