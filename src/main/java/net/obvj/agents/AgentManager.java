@@ -31,10 +31,9 @@ import org.springframework.util.ObjectUtils;
 import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.conf.ConfigurationHolder;
-import net.obvj.agents.util.AgentFactory;
-import net.obvj.agents.util.AnnotatedAgentScanner;
-import net.obvj.agents.util.ApplicationContextFacade;
-import net.obvj.agents.util.Exceptions;
+import net.obvj.agents.util.*;
+import net.obvj.agents.util.logging.LogArgument;
+import net.obvj.agents.util.logging.LogUtils;
 
 /**
  * A component that provides methods for Agents maintenance.
@@ -78,11 +77,14 @@ public class AgentManager
      */
     public void scanPackage(String basePackage)
     {
+        LogArgument logArgument = new LogArgument(CommonRegEx.JAVA_PACKAGE_NAME, basePackage);
+        LogUtils.logInfoSafely(LOG, "Scanning package: {}", logArgument);
+
         Collection<AgentConfiguration> agentCandidates = AnnotatedAgentScanner.scanPackage(basePackage);
 
         if (agentCandidates.isEmpty())
         {
-            LOG.warn("No agent found in base package \"{}\"", basePackage);
+            LogUtils.logWarnSafely(LOG, "No agent found in base package \"{}\"", logArgument);
             return;
         }
 
@@ -223,7 +225,7 @@ public class AgentManager
             throw Exceptions.illegalState(MSG_AGENT_STARTED_PLEASE_STOP_FIRST, name);
         }
 
-        LOG.info("Resetting agent: {}", name);
+        LOG.info("Resetting agent: {}", agent.getConfiguration().getClassName());
 
         String agentClass = agent.getConfiguration().getClassName();
         AgentConfiguration agentConfig = agentsByClass.get(agentClass);
