@@ -344,9 +344,9 @@ public abstract class AbstractAgent implements Runnable
         return stopRequested;
     }
 
-    public abstract String getStatusString();
+    public abstract String getStatusJson();
 
-    protected ToStringBuilder getPresetStatusStringBuilder()
+    protected ToStringBuilder getPresetStatusJsonBuilder()
     {
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.JSON_STYLE);
         builder.append("name", getName())

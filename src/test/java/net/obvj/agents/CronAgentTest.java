@@ -243,10 +243,10 @@ class CronAgentTest
     }
 
     @Test
-    void getAgentStatusString_validAgent_validString()
+    void getAgentStatusJson_validAgent_validString()
     {
         CronAgent agent = (CronAgent) AgentFactory.create(DUMMY_AGENT_CONFIG);
-        String statusWithoutQuotes = agent.getStatusString().replace("\"", "");
+        String statusWithoutQuotes = agent.getStatusJson().replace("\"", "");
         assertThat(statusWithoutQuotes,
                 containsAll("name:Agent1", "type:CRON", "status:SET", "startDate:null", "lastExecutionStartDate:null",
                         "cronExpression:0 0 * * 0", "cronDescription", "nextExecutionDate",

@@ -231,22 +231,12 @@ class AgentManagerTest
     }
 
     @Test
-    void getAgentStatusStr_knownAgent_expectedString()
+    void getAgentStatusJson_knownAgent_expectedString()
     {
         mockDummyAgent();
         prepareAgentManager(dummyAgent);
-        when(dummyAgent.getStatusString()).thenReturn("{\"statusStr\":\"statusStr1\"}");
-        assertThat(manager.getAgentStatusStr(DUMMY_AGENT), containsAll("\"statusStr\"", "\"statusStr1\""));
-    }
-
-    @Test
-    void getAgentStatusStr_knownAgentAndPrettyPrintingFalse_expectedString()
-    {
-        mockDummyAgent();
-        prepareAgentManager(dummyAgent);
-        String expectedValue = "statusStr1";
-        when(dummyAgent.getStatusString()).thenReturn(expectedValue);
-        assertEquals(expectedValue, manager.getAgentStatusStr(DUMMY_AGENT, false));
+        when(dummyAgent.getStatusJson()).thenReturn("{\"statusStr\":\"statusStr1\"}");
+        assertThat(manager.getAgentStatusJson(DUMMY_AGENT), containsAll("\"statusStr\"", "\"statusStr1\""));
     }
 
     @Test

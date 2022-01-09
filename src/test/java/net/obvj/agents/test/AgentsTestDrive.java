@@ -11,7 +11,7 @@ public class AgentsTestDrive
         agentManager.startAllAgents();
 
         Thread.sleep(10000);
-        System.out.println(agentManager.getAgentStatusStr("net.obvj.agents.test.agents.valid.DummyAgent"));
+        System.out.println(agentManager.getAgentStatusJson("net.obvj.agents.test.agents.valid.DummyAgent"));
     }
 
 }
