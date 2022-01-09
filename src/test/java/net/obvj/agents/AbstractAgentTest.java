@@ -7,7 +7,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
@@ -120,9 +120,9 @@ class AbstractAgentTest
     @Test
     void getStartDate_validCalendar_calendarClone()
     {
-        Calendar now = Calendar.getInstance();
+        Date now = new Date();
         agent.startDate = now;
-        Calendar startDate = agent.getStartDate();
+        Date startDate = agent.getStartDate();
         assertNotSame(now, startDate);
         assertThat(startDate.getTime(), is(now.getTime()));
     }
@@ -131,16 +131,16 @@ class AbstractAgentTest
     void getStartDate_null_null()
     {
         agent.startDate = null;
-        Calendar lastRunDate = agent.getStartDate();
+        Date lastRunDate = agent.getStartDate();
         assertNull(lastRunDate);
     }
 
     @Test
     void getLastRunDate_validCalendar_calendarClone()
     {
-        Calendar now = Calendar.getInstance();
+        Date now = new Date();
         agent.lastRun = now;
-        Calendar lastRunDate = agent.getLastRunDate();
+        Date lastRunDate = agent.getLastRunDate();
         assertNotSame(now, lastRunDate);
         assertThat(lastRunDate.getTime(), is(now.getTime()));
     }
@@ -149,7 +149,7 @@ class AbstractAgentTest
     void getLastRunDate_null_null()
     {
         agent.lastRun = null;
-        Calendar lastRunDate = agent.getLastRunDate();
+        Date lastRunDate = agent.getLastRunDate();
         assertNull(lastRunDate);
     }
 

@@ -17,7 +17,7 @@
 package net.obvj.agents;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Queue;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -65,12 +65,12 @@ public abstract class AbstractAgent implements Runnable
     /*
      * Stores the date & time this agent was started (schedule)
      */
-    protected Calendar startDate;
+    protected Date startDate;
 
     /*
      * The date & time when this agent task was last executed
      */
-    protected Calendar lastRun;
+    protected Date lastRun;
 
     protected Duration lastRunDuration;
 
@@ -162,17 +162,17 @@ public abstract class AbstractAgent implements Runnable
     /**
      * @return The date and time when this agent was started (scheduled).
      */
-    public Calendar getStartDate()
+    public Date getStartDate()
     {
-        return DateUtils.getClonedCalendar(startDate);
+        return DateUtils.getClonedDate(startDate);
     }
 
     /**
      * @return The date and time when this agent task was last executed.
      */
-    public Calendar getLastRunDate()
+    public Date getLastRunDate()
     {
-        return DateUtils.getClonedCalendar(lastRun);
+        return DateUtils.getClonedDate(lastRun);
     }
 
     /**
@@ -197,7 +197,7 @@ public abstract class AbstractAgent implements Runnable
             }
             onStart();
             setState(State.STARTED);
-            startDate = Calendar.getInstance();
+            startDate = new Date();
         }
     }
 
@@ -254,7 +254,7 @@ public abstract class AbstractAgent implements Runnable
             synchronized (runLock)
             {
                 setState(State.RUNNING);
-                lastRun = Calendar.getInstance();
+                lastRun = new Date();
                 LOG.debug("Running agent...");
                 try
                 {

@@ -150,25 +150,25 @@ public class DateUtils
      * hour</strong>, the return will be 00:00:00 (next day)</li>
      * </ul>
      *
-     * @param interval the maximum interval for each execution
-     * @param timeUnit the given interval's time unit
-     * @param calendar the source {@link Calendar} instance
+     * @param interval     the maximum interval for each execution
+     * @param timeUnit     the given interval's time unit
+     * @param baseCalendar the source {@link Calendar} instance
      * @return the next date for the given interval and time unit
      */
     @SuppressWarnings("squid:S128")
-    public static Date getNextExactDateEveryInterval(int interval, TimeUnit timeUnit, Calendar calendar)
+    static Date getNextExactDateEveryInterval(int interval, TimeUnit timeUnit, Calendar baseCalendar)
     {
-        Objects.requireNonNull(calendar, "The source calendar must not be null");
-        Calendar nextDate = getClonedCalendar(calendar);
+        Objects.requireNonNull(baseCalendar, "The base calendar must not be null");
+        Calendar nextCalendar = (Calendar) baseCalendar.clone();
 
-        int time = calendar.get(timeUnit.getCalendarConstant());
+        int time = baseCalendar.get(timeUnit.getCalendarConstant());
         int timeDiff = (time % interval == 0) ? 0 : interval - time % interval;
 
-        nextDate.add(timeUnit.getCalendarConstant(), timeDiff);
+        nextCalendar.add(timeUnit.getCalendarConstant(), timeDiff);
 
-        if (nextDate.before(calendar) || nextDate.equals(calendar))
+        if (nextCalendar.before(baseCalendar) || nextCalendar.equals(baseCalendar))
         {
-            nextDate.add(timeUnit.getCalendarConstant(), interval);
+            nextCalendar.add(timeUnit.getCalendarConstant(), interval);
         }
 
         switch (timeUnit)
@@ -176,25 +176,25 @@ public class DateUtils
         // NOTE: It is safe to ignore SonarQube squid:S128 here
         // We really want to continue executing the statements of the subsequent cases on purpose
         case HOURS:
-            nextDate.set(Calendar.MINUTE, 0);
+            nextCalendar.set(Calendar.MINUTE, 0);
         case MINUTES:
-            nextDate.set(Calendar.SECOND, 0);
+            nextCalendar.set(Calendar.SECOND, 0);
         case SECONDS:
-            nextDate.set(Calendar.MILLISECOND, 0);
+            nextCalendar.set(Calendar.MILLISECOND, 0);
         }
 
-        return nextDate.getTime();
+        return nextCalendar.getTime();
     }
 
     /**
-     * Creates and returns a clone of the given calendar object.
+     * Creates and returns a clone of the given date object.
      *
-     * @param calendar the source {@link Calendar}
-     * @return a copy of the given calendar instance
+     * @param date the source {@link Date}
+     * @return a copy of the given date instance
      */
-    public static Calendar getClonedCalendar(Calendar calendar)
+    public static Date getClonedDate(Date date)
     {
-        return calendar != null ? (Calendar) calendar.clone() : null;
+        return date != null ? (Date) date.clone() : null;
     }
 
     private static Calendar toCalendar(Date date)
