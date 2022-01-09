@@ -19,16 +19,9 @@ package net.obvj.agents.util;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.exception.AgentConfigurationException;
-import net.obvj.performetrics.Counter.Type;
-import net.obvj.performetrics.Stopwatch;
-import net.obvj.performetrics.util.Duration;
 
 /**
  * Contains methods for scanning package(s) to find annotated agents.
@@ -37,7 +30,6 @@ import net.obvj.performetrics.util.Duration;
  */
 public class AnnotatedAgentScanner
 {
-    private static final Logger LOG = LoggerFactory.getLogger(AnnotatedAgentScanner.class);
 
     private AnnotatedAgentScanner()
     {
@@ -75,18 +67,7 @@ public class AnnotatedAgentScanner
      */
     protected static Set<String> findAnnotatedAgentClasses(String basePackage)
     {
-        if (LOG.isInfoEnabled())
-        {
-            LOG.info("Scanning package: {}", StringUtils.defaultIfEmpty(basePackage, "<no package specified>"));
-        }
-
-        Stopwatch stopwatch = Stopwatch.createStarted(Type.WALL_CLOCK_TIME);
-        Set<String> classNames = AnnotationUtils.findClassesWithAnnotation(Agent.class, basePackage);
-
-        Duration elapsedDuration = stopwatch.elapsedTime(Type.WALL_CLOCK_TIME);
-        LOG.info("{} agent(s) found in {}: {}", classNames.size(), elapsedDuration, classNames);
-
-        return classNames;
+        return AnnotationUtils.findClassesWithAnnotation(Agent.class, basePackage);
     }
 
     protected static Class<?> toClass(String className)
