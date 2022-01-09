@@ -162,10 +162,10 @@ class TimerAgentTest
     }
 
     @Test
-    void getStatusString_validAgentWithStatusDisabled_validString()
+    void getStatusJson_validAgentWithStatusDisabled_validString()
     {
         TimerAgent agent = (TimerAgent) AgentFactory.create(DUMMY_AGENT_CONFIG_DISABLE_STATS);
-        String statusWithoutQuotes = agent.getStatusString().replace("\"", "");
+        String statusWithoutQuotes = agent.getStatusJson().replace("\"", "");
         assertThat(statusWithoutQuotes,
                 containsAll("name:DummyAgent", "type:TIMER", "status:SET", "startDate:null",
                         "lastExecutionStartDate:null", "interval:30 second(s)", "lastExecutionDuration:null",
@@ -173,10 +173,10 @@ class TimerAgentTest
     }
 
     @Test
-    void getStatusString_validAgentWithStatsEnabled_validString()
+    void getStatusJson_validAgentWithStatsEnabled_validString()
     {
         TimerAgent agent = (TimerAgent) AgentFactory.create(DUMMY_AGENT_CONFIG);
-        String statusWithoutQuotes = agent.getStatusString().replace("\"", "");
+        String statusWithoutQuotes = agent.getStatusJson().replace("\"", "");
         assertThat(statusWithoutQuotes,
                 containsAll("name:DummyAgent", "type:TIMER", "status:SET", "startDate:null",
                         "lastExecutionStartDate:null", "interval:30 second(s)", "lastExecutionDuration:null",

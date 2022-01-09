@@ -128,9 +128,9 @@ public abstract class TimerAgent extends AbstractAgent
      * @return A string with current agent status in JSON format
      */
     @Override
-    public String getStatusString()
+    public String getStatusJson()
     {
-        ToStringBuilder builder = getPresetStatusStringBuilder();
+        ToStringBuilder builder = getPresetStatusJsonBuilder();
         builder.append("interval", interval)
                .append("modulate", configuration.isModulate());
         return builder.build();

@@ -28,10 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
 import net.obvj.agents.annotation.Agent;
 import net.obvj.agents.conf.AgentConfiguration;
 import net.obvj.agents.conf.ConfigurationHolder;
@@ -50,7 +46,6 @@ public class AgentManager
 {
     private static final String MSG_INVALID_AGENT = "Invalid agent: %s";
     private static final String MSG_AGENT_STARTED_PLEASE_STOP_FIRST = "'%s' is started. Please stop the agent before this operation.";
-    private static final String SYSTEM_LINE_SEPARATOR = System.getProperty("line.separator");
 
     private static final Logger LOG = LoggerFactory.getLogger(AgentManager.class);
 
@@ -301,32 +296,15 @@ public class AgentManager
     }
 
     /**
-     * Returns a string containing agent status information for reporting.
+     * Returns a JSON string containing agent status information for reporting.
      *
      * @param name the identifier of the agent to be reported
-     * @return a String containing agent status information and other metadata
+     * @return a string in JSON format containing agent status information and other metadata
      * @throws IllegalArgumentException if no agent with the given name was found
      */
-    public String getAgentStatusStr(String name)
+    public String getAgentStatusJson(String name)
     {
-        return getAgentStatusStr(name, true);
-    }
-
-    protected String getAgentStatusStr(String name, boolean prettyPrinting)
-    {
-        String statusString = findAgentByName(name).getStatusString();
-        return prettyPrinting ? getPrettyPrintedJson(statusString) : statusString;
-    }
-
-    /**
-     * @param string the JSON object representation to be converted
-     * @return a JSON representation that fits in a page for pretty printing
-     */
-    private String getPrettyPrintedJson(String string)
-    {
-        JsonObject jsonObject = new Gson().fromJson(string, JsonObject.class);
-        String prettyPrintedJson = new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
-        return prettyPrintedJson.replace("\n", SYSTEM_LINE_SEPARATOR);
+        return findAgentByName(name).getStatusJson();
     }
 
     public void startAllAgents()
