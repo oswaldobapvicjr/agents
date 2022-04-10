@@ -43,7 +43,7 @@
 
         <!-- Compile dependencies versions -->
         <commons-lang.version>3.12.0</commons-lang.version>
-        <spring.version>5.3.15</spring.version>
+        <spring.version>5.3.18</spring.version>
         <logback.version>1.2.10</logback.version>
         <performetrics.version>2.2.4</performetrics.version>
         <confectory.version>1.2.0</confectory.version>
