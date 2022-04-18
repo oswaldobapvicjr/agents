@@ -1,5 +1,15 @@
 # Release notes
 
+## 0.3.1 <sup>(2022-04)</sup> [![Maven Central](https://img.shields.io/maven-central/v/net.obvj/agents?color=blue&versionPrefix=0.3.1)](https://search.maven.org/search?q=g:net.obvj%20AND%20a:agents%20AND%20v:0.3.1)
+
+#### Security fixes
+
+- `[#31]` Upgrade org.springframework:spring-core to 5.3.19 <sup>(#23, #29, #31)</sup> 
+- `[#30]` Upgrade net.obvj:confectory-datamapper-jackson2* to 2.1.0 <sup>(#22, #30)</sup>
+- `[#25]` Upgrade ch.qos.logback:logback-classic to 1.2.11
+- `[#24]` Upgrade com.google.guava:guava to 31.1-jre
+
+
 ## 0.3.0 <sup>(2022-01)</sup> [![Maven Central](https://img.shields.io/maven-central/v/net.obvj/agents?color=blue&versionPrefix=0.3.0)](https://search.maven.org/search?q=g:net.obvj%20AND%20a:agents%20AND%20v:0.3.0)
 
 #### New features/enhancements
