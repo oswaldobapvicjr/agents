@@ -12,9 +12,9 @@ A lightweight timer/cron agents framework for Java applications.
 
 ## Agents overview
 
-Convert any Java class into an Agent by adding the **@Agent** annotation at the class, then mark one method with the **@Run** annotation so it will be called automatically. The framework looks up for agent classes by scanning user-specified packages at runtime.
+Convert any Java class into an Agent by adding the **@Agent** annotation at the class, then mark one method with the **@Run** annotation so it will be called automatically. The framework looks up for agent classes by scanning user-specified packages at runtime and can run particular tasks periodically in the JVM.
 
-An agent can be o type **Timer** or **Cron**, both designed to run particular tasks periodically in the JVM.
+An agent can be of type **Timer** or **Cron**:
 
 ### Timer agents
 
@@ -91,7 +91,7 @@ If you are using Maven, add **Agents** as a dependency on your pom.xml file:
 <dependency>
     <groupId>net.obvj</groupId>
     <artifactId>agents</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.1</version>
 </dependency>
 ```
 
