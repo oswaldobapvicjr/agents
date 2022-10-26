@@ -43,7 +43,7 @@
 
         <!-- Compile dependencies versions -->
         <commons-lang.version>3.12.0</commons-lang.version>
-        <spring.version>5.3.22</spring.version>
+        <spring.version>5.3.23</spring.version>
         <performetrics.version>2.3.0</performetrics.version>
         <confectory.version>2.3.0</confectory.version>
         <guava.version>31.1-jre</guava.version>
