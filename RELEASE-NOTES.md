@@ -1,5 +1,24 @@
 # Release notes
 
+## 0.3.3 <sup>(2022-11)</sup> [![Maven Central](https://img.shields.io/maven-central/v/net.obvj/agents?color=blue&versionPrefix=0.3.3)](https://search.maven.org/search?q=g:net.obvj%20AND%20a:agents%20AND%20v:0.3.3)
+
+#### Security fixes
+
+- `[#41]` Upgrade `confectory` from 2.3.0 to 2.3.1
+- `[#40]` Upgrade `spring-context` from 5.3.22 to 5.3.23
+- `[#39]` Upgrade `confectory` from 2.2.0 to 2.3.0
+- `[#38]` Upgrade `cron-utils` from 9.1.7 to 9.2.0
+
+
+## 0.3.2 <sup>(2022-07)</sup> [![Maven Central](https://img.shields.io/maven-central/v/net.obvj/agents?color=blue&versionPrefix=0.3.2)](https://search.maven.org/search?q=g:net.obvj%20AND%20a:agents%20AND%20v:0.3.2)
+
+#### Security fixes
+
+- `[#35]` Upgrade `cron-utils` from 9.1.6 to 9.1.7
+- `[#34]` Upgrade `performetrics` from 2.2.4 to 2.3.0
+- `[#32]` Upgrade `spring-context` from 5.3.19 to 5.3.20
+
+
 ## 0.3.1 <sup>(2022-04)</sup> [![Maven Central](https://img.shields.io/maven-central/v/net.obvj/agents?color=blue&versionPrefix=0.3.1)](https://search.maven.org/search?q=g:net.obvj%20AND%20a:agents%20AND%20v:0.3.1)
 
 #### Security fixes
