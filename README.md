@@ -1,7 +1,7 @@
 # agents
 
 [![Known Vulnerabilities](https://snyk.io/test/github/oswaldobapvicjr/agents/badge.svg)](https://snyk.io/test/github/oswaldobapvicjr/agents)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/oswaldobapvicjr/agents/Java%20CI%20with%20Maven)](https://github.com/oswaldobapvicjr/agents/actions/workflows/maven.yml)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/oswaldobapvicjr/agents/maven.yml)](https://github.com/oswaldobapvicjr/agents/actions/workflows/maven.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/oswaldobapvicjr/agents)](https://codecov.io/gh/oswaldobapvicjr/agents)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.obvj/agents/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.obvj/agents)
 [![Javadoc](https://javadoc.io/badge2/net.obvj/agents/javadoc.svg)](https://javadoc.io/doc/net.obvj/agents)
@@ -91,7 +91,7 @@ If you are using Maven, add **Agents** as a dependency on your pom.xml file:
 <dependency>
     <groupId>net.obvj</groupId>
     <artifactId>agents</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.3</version>
 </dependency>
 ```
 
