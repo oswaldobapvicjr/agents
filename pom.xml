@@ -44,7 +44,7 @@
         <!-- Compile dependencies versions -->
         <commons-lang.version>3.12.0</commons-lang.version>
         <spring.version>5.3.26</spring.version>
-        <performetrics.version>2.3.0</performetrics.version>
+        <performetrics.version>2.4.0</performetrics.version>
         <confectory.version>2.3.1</confectory.version>
         <guava.version>31.1-jre</guava.version>
         <cron-utils.version>9.2.0</cron-utils.version>
