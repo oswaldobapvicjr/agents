@@ -47,7 +47,7 @@
         <performetrics.version>2.4.0</performetrics.version>
         <confectory.version>2.3.1</confectory.version>
         <guava.version>31.1-jre</guava.version>
-        <cron-utils.version>9.2.0</cron-utils.version>
+        <cron-utils.version>9.2.1</cron-utils.version>
 
         <!-- Test dependencies versions -->
         <junit.version>5.9.1</junit.version>
