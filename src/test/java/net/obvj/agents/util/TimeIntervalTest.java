@@ -20,7 +20,7 @@ class TimeIntervalTest
 {
     private void assertTimeIntervalOf(int expectedDuration, TimeUnit expectedTimeUnit, String input)
     {
-        TimeInterval timeInterval = TimeInterval.of(input);
+        TimeInterval timeInterval = TimeInterval.parseString2TimeInterval(input);
         assertThat(timeInterval.getDuration(), is(expectedDuration));
         assertThat(timeInterval.getTimeUnit(), is(expectedTimeUnit));
     }
@@ -87,33 +87,33 @@ class TimeIntervalTest
     @Test
     void of_invalidString_exception()
     {
-        assertThrows(IllegalArgumentException.class, () -> TimeInterval.of("1byte"));
+        assertThrows(IllegalArgumentException.class, () -> TimeInterval.parseString2TimeInterval("1byte"));
     }
 
     @Test
     void of_emptyString_exception()
     {
-        assertThrows(IllegalArgumentException.class, () -> TimeInterval.of(""));
+        assertThrows(IllegalArgumentException.class, () -> TimeInterval.parseString2TimeInterval(""));
     }
 
     @Test
     void equalsAndHashCode_similarObjects_handledAsEqualObject()
     {
         Set<TimeInterval> set = new HashSet<>();
-        set.add(TimeInterval.of("1 second"));
-        set.add(TimeInterval.of("1s"));
-        set.add(TimeInterval.of("1SECOND"));
+        set.add(TimeInterval.parseString2TimeInterval("1 second"));
+        set.add(TimeInterval.parseString2TimeInterval("1s"));
+        set.add(TimeInterval.parseString2TimeInterval("1SECOND"));
         assertThat(set.size(), is(1));
     }
 
     @Test
     void equals_multipleTimeIntervals_success()
     {
-        TimeInterval tenSeconds = TimeInterval.of("10 seconds");
+        TimeInterval tenSeconds = TimeInterval.parseString2TimeInterval("10 seconds");
         assertThat(tenSeconds.equals(tenSeconds), is(true));
-        assertThat(tenSeconds.equals(TimeInterval.of("10 s")), is(true));
-        assertThat(tenSeconds.equals(TimeInterval.of("1 seconds")), is(false));
-        assertThat(tenSeconds.equals(TimeInterval.of("10 minutes")), is(false));
+        assertThat(tenSeconds.equals(TimeInterval.parseString2TimeInterval("10 s")), is(true));
+        assertThat(tenSeconds.equals(TimeInterval.parseString2TimeInterval("1 seconds")), is(false));
+        assertThat(tenSeconds.equals(TimeInterval.parseString2TimeInterval("10 minutes")), is(false));
         assertThat(tenSeconds.equals(null), is(false));
         assertThat(tenSeconds.equals(new Object()), is(false));
     }
@@ -121,13 +121,13 @@ class TimeIntervalTest
     @Test
     void toMillis_validTimeInterval_sucess()
     {
-        assertThat(TimeInterval.of("2seconds").toMillis(), is(2000L));
+        assertThat(TimeInterval.parseString2TimeInterval("2seconds").toMillis(), is(2000L));
     }
 
     @Test
     void constructor_validSourceTimeInterval_equalButNotSameObject()
     {
-        TimeInterval original = TimeInterval.of("50 seconds");
+        TimeInterval original = TimeInterval.parseString2TimeInterval("50 seconds");
         TimeInterval clone = new TimeInterval(original);
         assertEquals(original, clone);
         assertNotSame(original, clone);
@@ -136,7 +136,7 @@ class TimeIntervalTest
     @Test
     void toString_validTimeInterval_success()
     {
-        assertThat(TimeInterval.of("10s").toString(), is("10 second(s)"));
+        assertThat(TimeInterval.parseString2TimeInterval("10s").toString(), is("10 second(s)"));
     }
 
 }

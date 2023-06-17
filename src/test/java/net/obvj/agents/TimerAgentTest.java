@@ -187,7 +187,7 @@ class TimerAgentTest
     void getInterval_validAgent_validInterval()
     {
         TimerAgent agent = (TimerAgent) AgentFactory.create(DUMMY_AGENT_CONFIG);
-        assertThat(agent.getInterval(), is(equalTo(TimeInterval.of("30 seconds"))));
+        assertThat(agent.getInterval(), is(equalTo(TimeInterval.parseString2TimeInterval("30 seconds"))));
     }
 
     @Test

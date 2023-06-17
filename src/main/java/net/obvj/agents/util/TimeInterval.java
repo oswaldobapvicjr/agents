@@ -73,7 +73,7 @@ public class TimeInterval
      * @return a TimerInteral from the given input
      * @throws IllegalArgumentException if the string is not in a valid TimeInterval format
      */
-    public static TimeInterval of(String input)
+    public static TimeInterval parseString2TimeInterval(String input)
     {
         int digits = extractFirstDigitGroupFrom(input);
         String timeUnitDescription = extractFirstLetterGroupFrom(input);
