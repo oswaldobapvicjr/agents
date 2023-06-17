@@ -86,6 +86,12 @@ public class ConfigurationHolder
     private void fillAuxiliaryObjects()
     {
         Configuration config = container.getBean();
+        // Set empty as defaults if none of .xml,.json or .yaml are supplied and caller will invoke scan packages programatically.
+        if (config == null) {
+            agentsByClassName = Collections.emptyMap();
+            globalConfiguration = new GlobalConfiguration();
+            return;
+        }
 
         agentsByClassName = getAgentConfigurationBuilders(config).stream()
                 .map(AgentConfiguration.Builder::build)
