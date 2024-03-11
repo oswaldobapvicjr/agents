@@ -25,7 +25,7 @@ class AgentConfigurationExceptionTest
         },
         throwsException(AgentConfigurationException.class)
                 .withMessage(DETAILED_MESSAGE1)
-                .withCause(null));
+                .withNoCause());
     }
 
     @Test

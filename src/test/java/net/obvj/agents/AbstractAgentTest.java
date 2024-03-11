@@ -2,10 +2,10 @@ package net.obvj.agents;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -35,86 +35,86 @@ class AbstractAgentTest
     void isStarted_set_false()
     {
         agent.setState(State.SET);
-        assertFalse("expected false on agent.isStarted()", agent.isStarted());
+        assertFalse(agent.isStarted());
     }
 
     @Test
     void isRunning_set_false()
     {
         agent.setState(State.SET);
-        assertFalse("expected false on agent.isRunning()", agent.isRunning());
+        assertFalse(agent.isRunning());
     }
 
     @Test
     void isStopped_set_false()
     {
         agent.setState(State.SET);
-        assertFalse("expected false on agent.isStopped()", agent.isStopped());
+        assertFalse(agent.isStopped());
     }
 
     @Test
     void isStarted_started_true()
     {
         agent.setState(State.STARTED);
-        assertTrue("expected true on agent.isStarted()", agent.isStarted());
+        assertTrue(agent.isStarted());
     }
 
     @Test
     void isRunning_started_false()
     {
         agent.setState(State.STARTED);
-        assertFalse("expected false on agent.isRunning()", agent.isRunning());
+        assertFalse(agent.isRunning());
     }
 
     @Test
     void isStopped_started_false()
     {
         agent.setState(State.STARTED);
-        assertFalse("expected false on agent.isStopped()", agent.isStopped());
+        assertFalse(agent.isStopped());
     }
 
     @Test
     void isStarted_running_false()
     {
         agent.setState(State.RUNNING);
-        assertFalse("expected false on agent.isStarted()", agent.isStarted());
+        assertFalse(agent.isStarted());
     }
 
     @Test
     void isRunning_running_true()
     {
         agent.setState(State.RUNNING);
-        assertFalse("expected false on agent.isStarted()", agent.isStarted());
-        assertTrue("expected true on agent.isRunning()", agent.isRunning());
-        assertFalse("expected false on agent.isStopped()", agent.isStopped());
+        assertFalse(agent.isStarted(), () -> "expected false on agent.isStarted()");
+        assertTrue(agent.isRunning(), () -> "expected true on agent.isRunning()");
+        assertFalse(agent.isStopped(), () -> "expected false on agent.isStopped()");
     }
 
     @Test
     void isStopped_running_false()
     {
         agent.setState(State.RUNNING);
-        assertFalse("expected false on agent.isStopped()", agent.isStopped());
+        assertFalse(agent.isStopped());
     }
 
     @Test
     void isStarted_stopped_false()
     {
         agent.setState(State.STOPPED);
-        assertFalse("expected false on agent.isStarted()", agent.isStarted());
+        assertFalse(agent.isStarted());
     }
 
     @Test
     void isRunning_stopped_false()
     {
         agent.setState(State.STOPPED);
-        assertFalse("expected false on agent.isRunning()", agent.isRunning());
+        assertFalse(agent.isRunning());
     }
 
     @Test
     void isStopped_stopped_true()
     {
         agent.setState(State.STOPPED);
-        assertTrue("expected true on agent.isStopped()", agent.isStopped());
+        assertTrue(agent.isStopped());
     }
 
     @Test

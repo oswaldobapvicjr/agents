@@ -5,8 +5,8 @@ import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -76,8 +76,8 @@ class AnnotationUtilsTest
 
         assertTrue(classNames.containsAll(ALL_AGENT_CLASS_NAMES));
 
-        assertFalse("A class without the @Agent annotation should not be retrieved",
-                classNames.containsAll(UNEXPECTED_AGENT_CLASS_NAMES));
+        assertFalse(classNames.containsAll(UNEXPECTED_AGENT_CLASS_NAMES),
+                () -> "A class without the @Agent annotation should not be retrieved");
     }
 
     @Test
@@ -89,8 +89,8 @@ class AnnotationUtilsTest
 
         assertTrue(classNames.containsAll(VALID_AGENT_CLASS_NAMES));
 
-        assertFalse("A class from another package should not be retrieved",
-                classNames.containsAll(INVALID_AGENT_CLASS_NAMES));
+        assertFalse(classNames.containsAll(INVALID_AGENT_CLASS_NAMES),
+                () -> "A class from another package should not be retrieved");
     }
 
     @Test

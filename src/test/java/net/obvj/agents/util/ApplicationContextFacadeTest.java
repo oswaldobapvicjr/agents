@@ -2,7 +2,7 @@ package net.obvj.agents.util;
 
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.instantiationNotAllowed;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
