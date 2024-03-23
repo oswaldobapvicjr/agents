@@ -4,8 +4,8 @@ import static net.obvj.junit.utils.matchers.AdvancedMatchers.instantiationNotAll
 import static net.obvj.junit.utils.matchers.AdvancedMatchers.throwsException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,8 +50,10 @@ class AnnotatedAgentScannerTest
     void findAnnotatedAgentClasses_validPackage_expectedClasses()
     {
         Set<String> result = AnnotatedAgentScanner.findAnnotatedAgentClasses(AGENTS_TEST_PACKAGE);
-        assertTrue("Not all expected agents were found", result.containsAll(EXPECTED_TEST_PACKAGE_AGENT_CLASSES));
-        assertFalse("Unexpected agent was found", result.containsAll(UNEXPECTED_TEST_PACKAGE_AGENT_CLASSES));
+        assertTrue(result.containsAll(EXPECTED_TEST_PACKAGE_AGENT_CLASSES),
+                () -> "Not all expected agents were found");
+        assertFalse(result.containsAll(UNEXPECTED_TEST_PACKAGE_AGENT_CLASSES),
+                () -> "Unexpected agent was found");
     }
 
     @Test
@@ -64,14 +66,14 @@ class AnnotatedAgentScannerTest
     void scanPackage_validPackage_validAgentConfigurations()
     {
         Set<AgentConfiguration> agentConfigurationsFound = AnnotatedAgentScanner.scanPackage(AGENTS_TEST_PACKAGE);
-        assertTrue("The expected number of agents was not reached",
-                agentConfigurationsFound.size() > EXPECTED_TEST_PACKAGE_AGENT_CLASSES.size());
+        assertTrue(agentConfigurationsFound.size() > EXPECTED_TEST_PACKAGE_AGENT_CLASSES.size(),
+                () -> "The expected number of agents was not reached");
 
         Set<String> mappedClassNames = agentConfigurationsFound.stream()
                 .map(AgentConfiguration::getClassName)
                 .collect(Collectors.toSet());
-        assertTrue("Not all expected agents were found",
-                mappedClassNames.containsAll(EXPECTED_TEST_PACKAGE_AGENT_CLASSES));
+        assertTrue(mappedClassNames.containsAll(EXPECTED_TEST_PACKAGE_AGENT_CLASSES),
+                () -> "Not all expected agents were found");
     }
 
     @Test
