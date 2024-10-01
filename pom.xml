@@ -42,7 +42,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Compile dependencies versions -->
-        <commons-lang.version>3.16.0</commons-lang.version>
+        <commons-lang.version>3.17.0</commons-lang.version>
         <spring.version>5.3.39</spring.version>
         <performetrics.version>2.5.3</performetrics.version>
         <confectory.version>2.5.0</confectory.version>
